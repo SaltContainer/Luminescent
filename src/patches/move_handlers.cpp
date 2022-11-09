@@ -50,21 +50,22 @@ constexpr int16_t EVENT_ID_WAZA_POWER = 70;
 void HandlerJumpKick(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method) {
     system_load_typeinfo((void *)0xaa66);
 
-    int32_t atkPokeID = Common::GetEventVar(args, EVENT_VAR_POKEID_ATK, nullptr);
-    if (atkPokeID != pokeID)
+    int32_t pokeIDVar = Common::GetEventVar(args, EVENT_VAR_POKEID, nullptr);
+    if (pokeIDVar != pokeID)
         return;
 
     BTL_POKEPARAM_o *bpp = Common::GetPokeParam(args, pokeID, nullptr);
     uint32_t damage = Calc::QuotMaxHP(bpp, 2, true, nullptr);
     Section_FromEvent_Damage_Description_o *desc = (Section_FromEvent_Damage_Description_o *)
             il2cpp_object_new(Section_FromEvent_Damage_Description_TypeInfo);
+    desc->ctor(nullptr);
     desc->fields.pokeID = pokeID;
     desc->fields.targetPokeID = pokeID;
     desc->fields.damage = (uint16_t)damage;
     desc->fields.damageCause = 19;
     desc->fields.damageCausePokeID = pokeID;
     desc->fields.successMessage->Setup(2, 1224, nullptr);
-    desc->fields.successMessage->AddArg(atkPokeID, nullptr);
+    desc->fields.successMessage->AddArg(pokeIDVar, nullptr);
     Common::Damage(args,&desc, nullptr);
 }
 void HandlerReturn(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method) {

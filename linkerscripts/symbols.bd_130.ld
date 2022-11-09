@@ -102,6 +102,7 @@ _ZN3Dpr6Battle5Logic25Section_FromEvent_Message20Description_TypeInfoE = 0x4c5af
 _ZN3Dpr6Battle5Logic26EventFactor_EventHandler_o4ctorElP10MethodInfo = 0x1d12b60 - 0x05708000;
 _ZN3Dpr6Battle5Logic33EventFactor_EventHandler_TypeInfoE = 0x04c5b150 - 0x05708000;
 _ZN3Dpr6Battle5Logic38EventFactor_EventHandlerTable_TypeInfoE = 0x04c5b158 - 0x05708000;
+_ZN3Dpr6Battle5Logic38Section_FromEvent_Damage_Description_o4ctorEP10MethodInfo = 0x1fb32c0 - 0x05708000;
 _ZN3Dpr6Battle5Logic44EventFactor_EventHandlerTable_Array_TypeInfoE = 0x4c5b148 - 0x05708000;
 _ZN3Dpr6Battle5Logic45Section_FromEvent_Damage_Description_TypeInfoE = 0x4c5b1d8 - 0x05708000;
 _ZN3Dpr6Battle5Logic4Calc9QuotMaxHPEPNS1_15BTL_POKEPARAM_oEjbP10MethodInfo = 0x1f74fe0 - 0x05708000;

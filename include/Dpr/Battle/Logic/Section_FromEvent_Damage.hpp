@@ -28,6 +28,8 @@ namespace Dpr
             };
 
             struct Section_FromEvent_Damage_Description_o {
+                void ctor(MethodInfo *method);
+
                 Section_FromEvent_Damage_Description_c *klass;
                 void *monitor;
                 Section_FromEvent_Damage_Description_Fields fields;
