@@ -1,3 +1,4 @@
+/*
 #include "Dpr/Battle/Logic/Common.hpp"
 #include "Dpr/Battle/Logic/Calc.hpp"
 #include "Dpr/Battle/Logic/EventFactor.hpp"
@@ -281,3 +282,4 @@ void * BTL_STRID_STD_system_array_new(void * typeInfo, uint32_t len)
     btl_strid_std_label->m_Items[BTL_STRID_STD_Magnitude7] = *System::String::CreateString("BTL_STRID_STD_Magnitude7");
     return arrayPtr;
 }
+*/

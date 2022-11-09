@@ -1,0 +1,3 @@
+[target=main, version=bd_130]
+18298a8:
+    bl CreateGET_FUNC_TABLE
