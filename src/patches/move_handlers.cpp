@@ -48,6 +48,8 @@ constexpr int16_t EVENT_ID_WAZA_POWER = 70;
 
 //EventHandler delegates
 void HandlerJumpKick(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method) {
+    system_load_typeinfo((void *)0xaa66);
+
     int32_t atkPokeID = Common::GetEventVar(args, EVENT_VAR_POKEID_ATK, nullptr);
     if (atkPokeID != pokeID)
         return;
