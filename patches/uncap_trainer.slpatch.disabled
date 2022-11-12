@@ -1,0 +1,36 @@
+[target=main, version=bd_130]
+018c1580:
+    b TrainerWork_Reset
+    ret
+
+018c1740:
+    b TrainerWork_ResetWinFlag
+    ret
+
+018c1670:
+    b TrainerWork_SetWinFlag
+    ret
+
+018c1800:
+    b TrainerWork_GetWinFlag
+    ret
+
+018c18a0:
+    b TrainerWork_GetWinFlag
+    ret
+
+018c1940:
+    b TrainerWork_SetBattleSaercher
+    ret
+
+018c1a10:
+    b TrainerWork_ReSetBattleSaercher
+    ret
+
+018c1ac0:
+    b TrainerWork_AllResetBattleSaercher
+    ret
+
+018c1bb0:
+    b TrainerWork_GetBattleSearcher
+    ret
