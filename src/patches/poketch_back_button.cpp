@@ -17,9 +17,11 @@ void poketchNextButtonInitializeHook(Dpr::UI::PoketchButton *__this, UnityEngine
 	Dpr::UI::PoketchButton *backButton = (Dpr::UI::PoketchButton*) parentTransform->getChild(parentTransform->get_childCount(nullptr) - 1, nullptr)->GetComponent(System::Type::GetType(System::String::CreateString("Dpr.UI.PoketchButton, Assembly-CSharp, Version=1.6.28.12450, Culture=neutral, PublicKeyToken=null"), nullptr), nullptr);
 
 	// Set up new unity action callback
-	UnityEngine::Events::UnityAction *backButtonCallback = (UnityEngine::Events::UnityAction*) il2cpp_object_new(UnityEngine::Events::UnityEngine_Events_UnityAction_TypeInfo);
+	UnityEngine::Events::UnityAction *backButtonCallback = (UnityEngine::Events::UnityAction*) il2cpp_object_new(UnityEngine::Events::UnityAction_TypeInfo);
 	// Add the callback function to the UnityAction
-	
+	backButtonCallback->fields.super.super.m_target;
+	backButtonCallback->fields.super.super.method_ptr;
+	backButtonCallback->fields.super.super.method;
 
 	// Call the initialize method on the previous button
 	backButton->Initialize(backButtonCallback, seEventId, nullptr);
