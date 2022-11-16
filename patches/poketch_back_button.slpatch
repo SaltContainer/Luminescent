@@ -1,4 +1,7 @@
 [target=main, version=bd_130]
 
+// Hook into Initialization of Poketch Next Button
+// Dpr.UI.PoketchWindow$$OnCreate
+// bl Dpr.UI.PoketchButton$$Initialize
 01e66b5c:
 	bl poketchNextButtonInitializeHook

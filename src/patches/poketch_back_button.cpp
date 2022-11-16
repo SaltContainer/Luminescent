@@ -14,11 +14,13 @@ void poketchNextButtonInitializeHook(Dpr::UI::PoketchButton *__this, UnityEngine
 
 	// Find the previous button (Final sibling of next button)
 	UnityEngine::Transform *parentTransform = __this->get_transform(nullptr)->getParent(nullptr);
-	Dpr::UI::PoketchButton *preButton = (Dpr::UI::PoketchButton*) parentTransform->getChild(parentTransform->get_childCount(nullptr) - 1, nullptr)->GetComponent(System::Type::GetType(System::String::CreateString("Dpr.UI.PoketchButton, Assembly-CSharp, Version=1.6.28.12450, Culture=neutral, PublicKeyToken=null"), nullptr), nullptr);
+	Dpr::UI::PoketchButton *backButton = (Dpr::UI::PoketchButton*) parentTransform->getChild(parentTransform->get_childCount(nullptr) - 1, nullptr)->GetComponent(System::Type::GetType(System::String::CreateString("Dpr.UI.PoketchButton, Assembly-CSharp, Version=1.6.28.12450, Culture=neutral, PublicKeyToken=null"), nullptr), nullptr);
 
 	// Set up new unity action callback
-	UnityEngine::Events::UnityAction *callbackPre = (UnityEngine::Events::UnityAction*) il2cpp_object_new(UnityEngine::Events::UnityEngine_Events_UnityAction_TypeInfo);
+	UnityEngine::Events::UnityAction *backButtonCallback = (UnityEngine::Events::UnityAction*) il2cpp_object_new(UnityEngine::Events::UnityEngine_Events_UnityAction_TypeInfo);
+	// Add the callback function to the UnityAction
+	
 
 	// Call the initialize method on the previous button
-	preButton->Initialize();
+	backButton->Initialize(backButtonCallback, seEventId, nullptr);
 }
