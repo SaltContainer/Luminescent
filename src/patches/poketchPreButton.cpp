@@ -1,0 +1,24 @@
+#include "il2cpp.hpp"
+#include "il2cpp-api.h"
+#include "Dpr/UI/PoketchButton.hpp"
+#include "UnityEngine/Events/UnityAction.hpp"
+#include "logger.hpp"
+#include "System/Type.hpp"
+
+// Hook called when poketch next button initialized during poketc window onCreate
+void poketchNextButtonInitializeHook(Dpr::UI::PoketchButton *__this, UnityEngine::Events::UnityAction *callback, uint32_t seEventId, MethodInfo *method) {
+	socket_log_fmt("Hook Called: Initialize called on poketch next button");
+
+	// Call the original initialize method for the next button
+	__this->Initialize(callback, seEventId, method);
+
+	// Find the previous button (Final sibling of next button)
+	UnityEngine::Transform *parentTransform = __this->get_transform(nullptr)->getParent(nullptr);
+	Dpr::UI::PoketchButton *preButton = (Dpr::UI::PoketchButton*) parentTransform->getChild(parentTransform->get_childCount(nullptr) - 1, nullptr)->GetComponent(System::Type::GetType(System::String::CreateString("Dpr.UI.PoketchButton, Assembly-CSharp, Version=1.6.28.12450, Culture=neutral, PublicKeyToken=null"), nullptr), nullptr);
+
+	// Set up new unity action callback
+	UnityEngine::Events::UnityAction *callbackPre = (UnityEngine::Events::UnityAction*) il2cpp_object_new(UnityEngine::Events::UnityEngine_Events_UnityAction_TypeInfo)
+
+	// Call the initialize method on the previous button
+	preButton->Initialize();
+}

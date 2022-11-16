@@ -1,0 +1,4 @@
+[target=main, version=bd_130]
+
+01e66b5c:
+	bl poketchNextButtonInitializeHook
