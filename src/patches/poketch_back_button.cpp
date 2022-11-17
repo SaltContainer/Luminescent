@@ -6,7 +6,10 @@
 #include "logger.hpp"
 #include "System/Type.hpp"
 
-// Hook called when poketch next button initialized during poketc window onCreate
+// Hook called when poketch next button initialized during poketch window onCreate
+// Dpr.UI.PoketchWindow$$OnCreate
+// bl Dpr.UI.PoketchButton$$Initialize
+// 01e66b5c
 void poketchNextButtonInitializeHook(Dpr::UI::PoketchButton *__this, UnityEngine::Events::UnityAction *callback, uint32_t seEventId, MethodInfo *method) {
 	socket_log_fmt("Hook Called: Initialize called on poketch next button");
 
