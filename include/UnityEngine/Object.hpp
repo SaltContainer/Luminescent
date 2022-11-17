@@ -1,5 +1,6 @@
 #pragma once
 #include "il2cpp.hpp"
+#include "System/Object.hpp"
 
 namespace UnityEngine
 {
@@ -25,7 +26,7 @@ namespace UnityEngine
         Object_Fields fields;
     };
 
-    struct Object {
+    struct Object : System::Object {
 
     };
 }

@@ -1,9 +1,12 @@
 #pragma once 
+#include "il2cpp.hpp"
 
 namespace System
 {
-    namespace Object
+    class Type;
+    struct Object
     {
         static void ctor(void * item, MethodInfo * method);
-    }
+        Type* GetType(MethodInfo * method);
+    };
 }
