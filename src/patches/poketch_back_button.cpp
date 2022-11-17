@@ -1,6 +1,7 @@
 #include "il2cpp.hpp"
 #include "il2cpp-api.h"
 #include "Dpr/UI/PoketchButton.hpp"
+#include "Dpr/UI/PoketchWindow.hpp"
 #include "UnityEngine/Events/UnityAction.hpp"
 #include "logger.hpp"
 #include "System/Type.hpp"
@@ -19,10 +20,14 @@ void poketchNextButtonInitializeHook(Dpr::UI::PoketchButton *__this, UnityEngine
 	// Set up new unity action callback
 	UnityEngine::Events::UnityAction *backButtonCallback = (UnityEngine::Events::UnityAction*) il2cpp_object_new(UnityEngine::Events::UnityAction_TypeInfo);
 	// Add the callback function to the UnityAction
-	backButtonCallback->fields.super.super.m_target;
-	backButtonCallback->fields.super.super.method_ptr;
-	backButtonCallback->fields.super.super.method;
+	backButtonCallback->fields.super.super.m_target = nullptr;
+	backButtonCallback->fields.super.super.method_ptr = (intptr_t)&*goToPreviousPoketchApp;
+	backButtonCallback->fields.super.super.method = (intptr_t)*goToPreviousPoketchApp;
 
 	// Call the initialize method on the previous button
 	backButton->Initialize(backButtonCallback, seEventId, nullptr);
+}
+
+void goToPreviousPoketchApp(MethodInfo *method) {
+	Dpr::UI::PoketchWindow::get_Instance(nullptr).SelectApp(false, nullptr);
 }

@@ -5,6 +5,7 @@ namespace Dpr {
 		struct PoketchWindow : UnityEngine::MonoBehaviour
 		{
 			static PoketchWindow get_Instance(MethodInfo *method);
+			void SelectApp(bool isForward, MethodInfo *method);
 		};
 		
 	}
