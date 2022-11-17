@@ -1,9 +1,10 @@
+#pragma once
 #include "Object.hpp"
-#include "GameObject.hpp"
-#include "Transform.hpp"
 #include "System/Type.hpp"
 
 namespace UnityEngine {
+	class GameObject;
+	class Transform;
 	struct Component : Object
 	{
 		GameObject* get_gameObject(MethodInfo *method);

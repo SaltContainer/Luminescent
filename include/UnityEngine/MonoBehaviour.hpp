@@ -1,3 +1,4 @@
+#pragma once
 #include "Behaviour.hpp"
 
 namespace UnityEngine {

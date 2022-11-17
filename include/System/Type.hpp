@@ -1,3 +1,5 @@
+#pragma once
+
 #include "il2cpp.hpp"
 #include "String.hpp"
 

@@ -24,4 +24,8 @@ namespace UnityEngine
         void *monitor;
         Object_Fields fields;
     };
+
+    struct Object {
+
+    };
 }

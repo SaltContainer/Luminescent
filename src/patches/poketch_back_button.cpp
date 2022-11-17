@@ -2,10 +2,16 @@
 #include "il2cpp-api.h"
 #include "Dpr/UI/PoketchButton.hpp"
 #include "Dpr/UI/PoketchWindow.hpp"
+#include "UnityEngine/GameObject.hpp"
+#include "UnityEngine/Transform.hpp"
 #include "UnityEngine/Events/UnityAction.hpp"
 #include "logger.hpp"
 #include "System/Type.hpp"
 #include "util.hpp"
+
+void goToPreviousPoketchApp(Dpr::UI::PoketchWindow *_this, MethodInfo *method) {
+	Dpr::UI::PoketchWindow::get_Instance(nullptr).SelectApp(false, nullptr);
+}
 
 // Hook called when poketch next button initialized during poketch window onCreate
 // Dpr.UI.PoketchWindow$$OnCreate
@@ -28,8 +34,4 @@ void poketchNextButtonInitializeHook(Dpr::UI::PoketchButton *__this, UnityEngine
 
 	// Call the initialize method on the previous button
 	backButton->Initialize(backButtonCallback, seEventId, nullptr);
-}
-
-void goToPreviousPoketchApp(Dpr::UI::PoketchWindow *_this, MethodInfo *method) {
-	Dpr::UI::PoketchWindow::get_Instance(nullptr).SelectApp(false, nullptr);
 }

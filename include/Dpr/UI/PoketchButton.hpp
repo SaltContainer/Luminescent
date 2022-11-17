@@ -1,4 +1,5 @@
-#include "UnityEngine/MonoBehaviour.hpp";
+#pragma once
+#include "UnityEngine/MonoBehaviour.hpp"
 #include "UnityEngine/Events/UnityAction.hpp"
 
 namespace Dpr {

@@ -1,24 +1,8 @@
+#pragma once
+
 namespace UnityEngine {
 	namespace Events {
-		struct UnityAction
-		{
-			UnityAction_Klass *klass;
-			void *monitor;
-			UnityAction_Fields fields;
-
-			void ctor(Il2CppObject *target, MethodInfo *method);
-		};
-
 		extern void* UnityAction_TypeInfo;
-
-		struct UnityAction_Klass
-		{
-			Il2CppClass_1 _1;
-			struct UnityAction_StaticFields* static_fields;
-			UnityAction_RGCTXs* rgctx_data;
-			Il2CppClass_2 _2;
-			UnityAction_VTable vtable;
-		};
 		
 		struct UnityAction_Fields
 		{
@@ -50,6 +34,24 @@ namespace UnityEngine {
 			VirtualInvokeData _12_Invoke;
 			VirtualInvokeData _13_BeginInvoke;
 			VirtualInvokeData _14_EndInvoke;
+		};
+		
+		struct UnityAction_Klass
+		{
+			Il2CppClass_1 _1;
+			struct UnityAction_StaticFields* static_fields;
+			UnityAction_RGCTXs* rgctx_data;
+			Il2CppClass_2 _2;
+			UnityAction_VTable vtable;
+		};
+		
+		struct UnityAction
+		{
+			UnityAction_Klass *klass;
+			void *monitor;
+			UnityAction_Fields fields;
+
+			void ctor(Il2CppObject *target, MethodInfo *method);
 		};
 	}
 }
