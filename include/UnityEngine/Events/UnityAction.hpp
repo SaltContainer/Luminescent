@@ -5,6 +5,8 @@ namespace UnityEngine {
 			UnityAction_Klass *klass;
 			void *monitor;
 			UnityAction_Fields fields;
+
+			void ctor(Il2CppObject *target, MethodInfo *method);
 		};
 
 		extern void* UnityAction_TypeInfo;

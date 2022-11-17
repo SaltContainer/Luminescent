@@ -5,6 +5,7 @@
 #include "UnityEngine/Events/UnityAction.hpp"
 #include "logger.hpp"
 #include "System/Type.hpp"
+#include "util.hpp"
 
 // Hook called when poketch next button initialized during poketch window onCreate
 // Dpr.UI.PoketchWindow$$OnCreate
@@ -23,14 +24,12 @@ void poketchNextButtonInitializeHook(Dpr::UI::PoketchButton *__this, UnityEngine
 	// Set up new unity action callback
 	UnityEngine::Events::UnityAction *backButtonCallback = (UnityEngine::Events::UnityAction*) il2cpp_object_new(UnityEngine::Events::UnityAction_TypeInfo);
 	// Add the callback function to the UnityAction
-	backButtonCallback->fields.super.super.m_target = nullptr;
-	backButtonCallback->fields.super.super.method_ptr = (intptr_t)&*goToPreviousPoketchApp;
-	backButtonCallback->fields.super.super.method = (intptr_t)*goToPreviousPoketchApp;
+	backButtonCallback->ctor(nullptr, copyMethodInfo(Dpr::UI::Dpr_UI_PoketchWindow__OnCreate_b__90_0, (Il2CppMethodPointer) &goToPreviousPoketchApp));
 
 	// Call the initialize method on the previous button
 	backButton->Initialize(backButtonCallback, seEventId, nullptr);
 }
 
-void goToPreviousPoketchApp(MethodInfo *method) {
+void goToPreviousPoketchApp(Dpr::UI::PoketchWindow *_this, MethodInfo *method) {
 	Dpr::UI::PoketchWindow::get_Instance(nullptr).SelectApp(false, nullptr);
 }
