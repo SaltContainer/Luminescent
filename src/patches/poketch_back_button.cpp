@@ -41,6 +41,10 @@ void poketchNextButtonInitializeHook(Dpr::UI::PoketchButton *__this, UnityEngine
 	backButton->Initialize(backButtonCallback, seEventId, nullptr);
 }
 
+// Hook into IsInRange check of Poketch Next Button
+// Dpr.UI.PoketchWindow$$OnUpdate
+// bl Dpr.UI.PoketchWindow$$IsInRange
+// 01e67a3c
 bool poketchCheckIfPressButton(Dpr::UI::PoketchWindow *__this, Dpr::UI::PoketchButton *target, float posX, float posY, MethodInfo *method) {
 	socket_log_fmt("Hook Called: IsInRange called on Poketch Next Button");
 
