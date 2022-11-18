@@ -316,3 +316,5 @@ _ZN6System4Type7GetTypeEPNS_6StringEP10MethodInfo = 0x02b1e1d0 - 0x05708000;
 _ZN6System6String12CreateStringEPKc = 0x026fb7a0 - 0x05708000;
 _ZN6System4Type7GetTypeEP12Il2CppObjectP10MethodInfo = 0x0024bad8 - 0x05708000;
 _ZN6System6Object7GetTypeEP10MethodInfo = 0x0024bad8 - 0x05708000;
+_ZN3Dpr2UI13PoketchWindow9IsInRangeEPNS0_13PoketchButtonEffP10MethodInfo = 0x01e68830 - 0x05708000;
+_ZN3Dpr2UI13PoketchButton6OnPushEP10MethodInfo = 0x01e622c0 - 0x05708000;

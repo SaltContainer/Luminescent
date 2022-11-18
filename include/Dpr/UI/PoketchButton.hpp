@@ -7,6 +7,7 @@ namespace Dpr {
 		struct PoketchButton : UnityEngine::MonoBehaviour
 		{
 			void Initialize(UnityEngine::Events::UnityAction *callback, uint32_t seEventId, MethodInfo *method);
+			void OnPush(MethodInfo *method);
 		};
 		
 	}

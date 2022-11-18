@@ -9,6 +9,8 @@
 #include "System/Type.hpp"
 #include "util.hpp"
 
+Dpr::UI::PoketchButton *backButton = nullptr;
+
 void goToPreviousPoketchApp(Dpr::UI::PoketchWindow *_this, MethodInfo *method) {
 	Dpr::UI::PoketchWindow::get_Instance(nullptr).SelectApp(false, nullptr);
 }
@@ -28,7 +30,7 @@ void poketchNextButtonInitializeHook(Dpr::UI::PoketchButton *__this, UnityEngine
 	System::Type *poketchButtonType = __this->GetType(nullptr);
 	int32_t childCount = parentTransform->get_childCount(nullptr);
 	UnityEngine::Transform *childTransform = parentTransform->getChild(childCount - 1, nullptr);
-	Dpr::UI::PoketchButton *backButton = (Dpr::UI::PoketchButton*) childTransform->GetComponent(poketchButtonType, nullptr);
+	backButton = (Dpr::UI::PoketchButton*) childTransform->GetComponent(poketchButtonType, nullptr);
 
 	// Set up new unity action callback
 	UnityEngine::Events::UnityAction *backButtonCallback = (UnityEngine::Events::UnityAction*) il2cpp_object_new(UnityEngine::Events::UnityAction_TypeInfo);
@@ -37,4 +39,27 @@ void poketchNextButtonInitializeHook(Dpr::UI::PoketchButton *__this, UnityEngine
 
 	// Call the initialize method on the previous button
 	backButton->Initialize(backButtonCallback, seEventId, nullptr);
+}
+
+bool poketchCheckIfPressButton(Dpr::UI::PoketchWindow *__this, Dpr::UI::PoketchButton *target, float posX, float posY, MethodInfo *method) {
+	socket_log_fmt("Hook Called: IsInRange called on Poketch Next Button");
+
+	// Check if we are in range of the next button
+	// If so process as normal
+	bool isInRangeNextButton = __this->IsInRange(target, posX, posY, method);
+	if (isInRangeNextButton)
+	{
+		return true;
+	}
+
+	// Check if we are in range of the back button
+	// If so, process back buttons on push function
+	bool isInRangeBackButton = __this->IsInRange(backButton, posX, posY, method);
+	if (isInRangeBackButton)
+	{
+		backButton->OnPush(nullptr);
+	}
+
+	// return as normal
+	return false;
 }

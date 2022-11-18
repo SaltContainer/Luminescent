@@ -5,3 +5,9 @@
 // bl Dpr.UI.PoketchButton$$Initialize
 01e66b5c:
 	bl poketchNextButtonInitializeHook
+
+// Hook into IsInRange check of Poketch Next Button
+// Dpr.UI.PoketchWindow$$OnUpdate
+// bl Dpr.UI.PoketchWindow$$IsInRange
+01e67a3c:
+	bl poketchCheckIfPressButton
