@@ -1,5 +1,12 @@
 [target=main, version=bd_130]
 
+// Hook into Unity Action constructor of Poketch Next Button
+// Dpr.UI.PoketchWindow$$OnCreate
+// bl UnityEngine.Events.UnityAction$$.ctor
+// 01e66b4c
+01e66b4c:
+	bl poketchNextButtonUnityActionConstructorHook
+
 // Hook into Initialization of Poketch Next Button
 // Dpr.UI.PoketchWindow$$OnCreate
 // bl Dpr.UI.PoketchButton$$Initialize

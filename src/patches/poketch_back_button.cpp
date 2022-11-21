@@ -9,11 +9,37 @@
 #include "System/Type.hpp"
 #include "util.hpp"
 
+UnityEngine::Events::UnityAction *backButtonAction = nullptr;
 Dpr::UI::PoketchButton *backButton = nullptr;
 
-void goToPreviousPoketchApp(Dpr::UI::PoketchWindow *_this, MethodInfo *method) {
-	Dpr::UI::PoketchWindow::get_Instance(nullptr).SelectApp(false, nullptr);
+// Function called when back button is pressed
+void goToPreviousPoketchApp(Dpr::UI::PoketchWindow *__this, MethodInfo *method) {
+	socket_log_fmt("Hook Called: Poketch Back Button Pressed");
+
+	// Call SelectApp with isForward set to false
+	__this->SelectApp(false, nullptr);
 }
+
+// Hook called when poketch next button Unity Action created during poketch window onCreate
+// Dpr.UI.PoketchWindow$$OnCreate
+// bl UnityEngine.Events.UnityAction$$.ctor
+// 01e66b4c
+void poketchNextButtonUnityActionConstructorHook(UnityEngine::Events::UnityAction *__this, Il2CppObject *target, MethodInfo *method) {
+	socket_log_fmt("Hook Called: Unity Action Constructor called on Poketch Next Button");
+
+	// Set up the original Unity Action
+	__this->ctor(target, method);
+
+	// Use the current methodinfo to create our new methodinfo
+	MethodInfo *backButtonMethodInfo = copyMethodInfo(method, (Il2CppMethodPointer) &goToPreviousPoketchApp);
+
+	// Create a new Unity Object
+	backButtonAction = (UnityEngine::Events::UnityAction*) il2cpp_object_new(UnityEngine::Events::UnityAction_TypeInfo);
+
+	// Set up the new Unity Action
+	backButtonAction->ctor(target, backButtonMethodInfo);
+}
+
 
 // Hook called when poketch next button initialized during poketch window onCreate
 // Dpr.UI.PoketchWindow$$OnCreate
@@ -25,20 +51,15 @@ void poketchNextButtonInitializeHook(Dpr::UI::PoketchButton *__this, UnityEngine
 	// Call the original initialize method for the next button
 	__this->Initialize(callback, seEventId, method);
 	
-	// Find the previous button (Final sibling of next button)
+	// Find the back button (Final sibling of next button)
 	UnityEngine::Transform *parentTransform = __this->get_transform(nullptr)->getParent(nullptr);
 	System::Type *poketchButtonType = __this->GetType(nullptr);
 	int32_t childCount = parentTransform->get_childCount(nullptr);
 	UnityEngine::Transform *childTransform = parentTransform->getChild(childCount - 1, nullptr);
 	backButton = (Dpr::UI::PoketchButton*) childTransform->GetComponent(poketchButtonType, nullptr);
 
-	// Set up new unity action callback
-	UnityEngine::Events::UnityAction *backButtonCallback = (UnityEngine::Events::UnityAction*) il2cpp_object_new(UnityEngine::Events::UnityAction_TypeInfo);
-	// Add the callback function to the UnityAction
-	backButtonCallback->ctor(nullptr, copyMethodInfo(Dpr::UI::Dpr_UI_PoketchWindow__OnCreate_b__90_0, (Il2CppMethodPointer) &goToPreviousPoketchApp));
-
 	// Call the initialize method on the previous button
-	backButton->Initialize(backButtonCallback, seEventId, nullptr);
+	backButton->Initialize(backButtonAction, seEventId, nullptr);
 }
 
 // Hook into IsInRange check of Poketch Next Button
