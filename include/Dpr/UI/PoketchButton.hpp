@@ -10,5 +10,13 @@ namespace Dpr {
 			void OnPush(MethodInfo *method);
 		};
 		
+		struct PoketchButton_array
+		{
+			Il2CppObject obj;
+			Il2CppArrayBounds *bounds;
+			il2cpp_array_size_t max_length;
+			PoketchButton* m_Items[65535];
+		};
+		
 	}
 }

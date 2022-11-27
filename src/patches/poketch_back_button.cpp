@@ -1,5 +1,6 @@
 #include "il2cpp.hpp"
 #include "il2cpp-api.h"
+#include "Dpr/UI/PoketchAppBase.hpp"
 #include "Dpr/UI/PoketchButton.hpp"
 #include "Dpr/UI/PoketchWindow.hpp"
 #include "UnityEngine/GameObject.hpp"
@@ -11,6 +12,8 @@
 
 UnityEngine::Events::UnityAction *backButtonAction = nullptr;
 Dpr::UI::PoketchButton *backButton = nullptr;
+Dpr::UI::PoketchButton *changeButton = nullptr;
+int count = 0;
 
 // Function called when back button is pressed
 void goToPreviousPoketchApp(Dpr::UI::PoketchWindow *__this, MethodInfo *method) {
@@ -50,6 +53,7 @@ void poketchNextButtonInitializeHook(Dpr::UI::PoketchButton *__this, UnityEngine
 
 	// Call the original initialize method for the next button
 	__this->Initialize(callback, seEventId, method);
+	changeButton = __this;
 	
 	// Find the back button (Final sibling of next button)
 	UnityEngine::Transform *parentTransform = __this->get_transform(nullptr)->getParent(nullptr);
@@ -87,4 +91,36 @@ bool poketchCheckIfPressButton(Dpr::UI::PoketchWindow *__this, Dpr::UI::PoketchB
 
 	// return as normal
 	return false;
+}
+
+void poketchButtonCheckLoopSetCount() {
+	// set our count to 0
+	count = 0;
+	// set the original variable to 0
+	__asm("mov x27,xzr");
+}
+
+void poketchButtonCheckLoopAddCountOne() {
+	// increment our count
+	count++;
+	// increment the original variable
+	__asm("add x27,x27,#0x1");
+}
+
+// bl poketchButtonCheckIfFinal
+// 01e67cc0:
+Dpr::UI::PoketchButton** poketchButtonCheckIfFinal(Dpr::UI::PoketchAppBase *app) {
+	// Get the number of buttons from the currently selected app
+	long numberOfButtons = app->fields.Buttons->max_length;
+	if (count == numberOfButtons)
+	{
+		// set forward button
+		return &changeButton;
+	} else if (count > numberOfButtons) {
+		// set the back button
+		return &backButton;
+	} else {
+		// Return null to check app buttons
+		return nullptr;
+	}
 }

@@ -5,6 +5,11 @@
 namespace UnityEngine {
 	class GameObject;
 	class Transform;
+
+	struct Component_Fields {
+		Object_Fields super;
+	};
+
 	struct Component : Object
 	{
 		GameObject* get_gameObject(MethodInfo *method);
