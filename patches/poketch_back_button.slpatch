@@ -23,7 +23,7 @@
 // Dpr.UI.PoketchWindow$$OnUpdate
 // b.ge 0x01e6819c
 01e67c70:
-	b.gt 0x01e6819c
+	b.gt 0x01E0052C
 
 // Set the internal loop counter to 0
 01e67be8:
