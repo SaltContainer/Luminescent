@@ -2,6 +2,7 @@
 
 #include "il2cpp.hpp"
 #include "System/Array.hpp"
+#include "EventFactor.hpp"
 
 namespace Dpr
 {

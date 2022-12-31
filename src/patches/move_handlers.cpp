@@ -1,6 +1,9 @@
+#include "Dpr/Battle/Logic/BtlStrType.hpp"
 #include "Dpr/Battle/Logic/Calc.hpp"
 #include "Dpr/Battle/Logic/Common.hpp"
 #include "Dpr/Battle/Logic/EventFactor.hpp"
+#include "Dpr/Battle/Logic/EventID.hpp"
+#include "Dpr/Battle/Logic/EventVar.hpp"
 #include "Dpr/Battle/Logic/Handler.hpp"
 #include "Dpr/Battle/Logic/Section_FromEvent_Damage.hpp"
 
@@ -15,26 +18,13 @@ using namespace Dpr::Battle::Logic::Handler;
 // Template MethodInfo
 extern MethodInfo * Handler_Karagenki_WazaPowMethodInfo;
 
-// Remember to update when adding moves
+// Remember to update when adding handlers
 constexpr uint32_t NEW_MOVES_COUNT = 3;
 
-//EventVar.Label
-constexpr uint16_t EVENT_VAR_POKEID = 2;
-constexpr uint16_t EVENT_VAR_POKEID_ATK = 3;
-constexpr uint16_t EVENT_VAR_POKEPOS = 13;
-constexpr uint16_t EVENT_VAR_WAZAID = 18;
-constexpr uint16_t EVENT_VAR_CHECK_HIDE = 24; // Used Fly/Dig before
-constexpr uint16_t EVENT_VAR_WAZA_POWER = 51;
-constexpr uint16_t EVENT_VAR_WAZA_POWER_RATIO = 52;
-constexpr uint16_t EVENT_VAR_WORK_ADRS = 68;
-constexpr uint16_t EVENT_VAR_AVOID_FLAG = 73;
-constexpr uint16_t EVENT_VAR_GEN_FLAG = 89;
-constexpr uint16_t EVENT_VAR_DISABLE_BURN_FLAG = 90;
-
-//WazaNo
-constexpr int32_t WAZA_NO_JUMP_KICK = 26;
-constexpr int32_t WAZA_NO_RETURN = 216;
-constexpr int32_t WAZA_NO_FRUSTRATION = 218;
+// MoveIDs
+constexpr int32_t JUMP_KICK_ID = 26;
+constexpr int32_t RETURN_ID = 216;
+constexpr int32_t FRUSTRATION_ID = 218;
 
 //HanderTables
 static System::Array<EventFactor_EventHandlerTable_o *> * sHandlerTableJumpKick;
@@ -50,7 +40,7 @@ constexpr int16_t EVENT_ID_WAZA_POWER = 70;
 void HandlerJumpKick(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method) {
     system_load_typeinfo((void *)0xaa66);
 
-    int32_t pokeIDVar = Common::GetEventVar(args, EVENT_VAR_POKEID, nullptr);
+    int32_t pokeIDVar = Common::GetEventVar(args, EventVar::POKEID, nullptr);
     if (pokeIDVar != pokeID)
         return;
 
@@ -64,43 +54,33 @@ void HandlerJumpKick(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, Meth
     desc->fields.damage = (uint16_t)damage;
     desc->fields.damageCause = 19;
     desc->fields.damageCausePokeID = pokeID;
-    desc->fields.successMessage->Setup(2, 1224, nullptr);
+    desc->fields.successMessage->Setup(BtlStrType::BTL_STRTYPE_SET, 1224, nullptr);
     desc->fields.successMessage->AddArg(pokeIDVar, nullptr);
     Common::Damage(args,&desc, nullptr);
 }
 void HandlerReturn(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method) {
-    int32_t evPokeID = Common::GetEventVar(args, EVENT_VAR_POKEID_ATK, (MethodInfo *) nullptr);
+    int32_t evPokeID = Common::GetEventVar(args, EventVar::POKEID_ATK, (MethodInfo *) nullptr);
     if (evPokeID != pokeID)
         return;
 
     BTL_POKEPARAM_o * bpp = Common::GetPokeParam(args, pokeID, (MethodInfo *) nullptr);
     uint8_t friendship = bpp->GetFriendship((MethodInfo *) nullptr);
     int32_t waza_power = friendship / 2.5;
-    Common::RewriteEventVar(args, EVENT_VAR_WAZA_POWER, waza_power, (MethodInfo *) nullptr);
+    Common::RewriteEventVar(args, EventVar::WAZA_POWER, waza_power, (MethodInfo *) nullptr);
 }
 void HandlerFrustration(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method) {
-    int32_t evPokeID = Common::GetEventVar(args, EVENT_VAR_POKEID_ATK, (MethodInfo *) nullptr);
+    int32_t evPokeID = Common::GetEventVar(args, EventVar::POKEID_ATK, (MethodInfo *) nullptr);
     if (evPokeID != pokeID)
         return;
 
     BTL_POKEPARAM_o * bpp = Common::GetPokeParam(args, pokeID, (MethodInfo *) nullptr);
     uint8_t friendship = bpp->GetFriendship((MethodInfo *) nullptr);
     int32_t waza_power = (255 - friendship) / 2.5;
-    Common::RewriteEventVar(args, EVENT_VAR_WAZA_POWER, waza_power, (MethodInfo *) nullptr);
+    Common::RewriteEventVar(args, EventVar::WAZA_POWER, waza_power, (MethodInfo *) nullptr);
 }
 
-//Creates an EventHandler from an Il2CppMethodPointer
-EventFactor_EventHandlerTable_o * CreateEventHandler(uint16_t eventID, Il2CppMethodPointer methodPointer) {
-    MethodInfo * method = copyMethodInfo(Handler_Karagenki_WazaPowMethodInfo, methodPointer);
-    EventFactor_EventHandlerTable_o * evtHandlerTable = (EventFactor_EventHandlerTable_o *)
-            il2cpp_object_new(EventFactor_EventHandlerTable_TypeInfo);
-    EventFactor_EventHandler_o * evtHandler = (EventFactor_EventHandler_o *)
-            il2cpp_object_new(EventFactor_EventHandler_TypeInfo);
-    evtHandler->ctor(0, method);
-    evtHandlerTable->fields.eventID = eventID;
-    evtHandlerTable->fields.eventHandler = evtHandler;
-
-    return evtHandlerTable;
+EventFactor_EventHandlerTable_o * CreateMoveEventHandler(uint16_t eventID, Il2CppMethodPointer methodPointer) {
+    return CreateEventHandler(eventID, Handler_Karagenki_WazaPowMethodInfo, methodPointer);
 }
 
 //HandlerGetFunc delegates
@@ -109,7 +89,7 @@ System::Array<EventFactor_EventHandlerTable_o *> * ADD_JumpKick(MethodInfo *meth
         sHandlerTableJumpKick = (System::Array<EventFactor_EventHandlerTable_o *> *)
                 system_array_new(EventFactor_EventHandlerTable_Array_TypeInfo, 1);
         sHandlerTableJumpKick->m_Items[0] =
-                CreateEventHandler(EVENT_ID_WAZA_EXECUTE_NO_EFFECT, (Il2CppMethodPointer) &HandlerJumpKick);
+                CreateMoveEventHandler(EVENT_ID_WAZA_EXECUTE_NO_EFFECT, (Il2CppMethodPointer) &HandlerJumpKick);
     }
     return sHandlerTableJumpKick;
 }
@@ -118,7 +98,7 @@ System::Array<EventFactor_EventHandlerTable_o *> * ADD_Return(MethodInfo *method
         sHandlerTableReturn = (System::Array<EventFactor_EventHandlerTable_o *> *)
                 system_array_new(EventFactor_EventHandlerTable_Array_TypeInfo, 1);
         sHandlerTableReturn->m_Items[0] =
-                CreateEventHandler(EVENT_ID_WAZA_POWER, (Il2CppMethodPointer) &HandlerReturn);
+                CreateMoveEventHandler(EVENT_ID_WAZA_POWER, (Il2CppMethodPointer) &HandlerReturn);
     }
     return sHandlerTableReturn;
 }
@@ -127,13 +107,13 @@ System::Array<EventFactor_EventHandlerTable_o *> * ADD_Frustration(MethodInfo *m
         sHandlerTableFrustration = (System::Array<EventFactor_EventHandlerTable_o *> *)
                 system_array_new(EventFactor_EventHandlerTable_Array_TypeInfo, 1);
         sHandlerTableFrustration->m_Items[0] =
-                CreateEventHandler(EVENT_ID_WAZA_POWER, (Il2CppMethodPointer) &HandlerFrustration);
+                CreateMoveEventHandler(EVENT_ID_WAZA_POWER, (Il2CppMethodPointer) &HandlerFrustration);
     }
     return sHandlerTableFrustration;
 }
 
 //Adds an additional entry to GET_FUNC_TABLE
-void AddGET_FUNC_TABLE_ELEM(System::Array<Waza_GET_FUNC_TABLE_ELEM_o> * getFuncTable, uint32_t * idx, int32_t wazaNo,
+void SetMoveFunctionTable(System::Array<Waza_GET_FUNC_TABLE_ELEM_o> * getFuncTable, uint32_t * idx, int32_t wazaNo,
                             Il2CppMethodPointer methodPointer) {
     MethodInfo * method = copyMethodInfo(Method_ADD_Karagenki, methodPointer);
     Waza_GET_FUNC_TABLE_ELEM_o * elem = &getFuncTable->m_Items[*idx];
@@ -145,14 +125,14 @@ void AddGET_FUNC_TABLE_ELEM(System::Array<Waza_GET_FUNC_TABLE_ELEM_o> * getFuncT
 }
 
 //Entry point. Replaces system_array_new.
-void * CreateGET_FUNC_TABLE(void * typeInfo, uint32_t len) {
+void * Waza_system_array_new(void * typeInfo, uint32_t len) {
     System::Array<Waza_GET_FUNC_TABLE_ELEM_o> * getFuncTable =
             (System::Array<Waza_GET_FUNC_TABLE_ELEM_o> *) system_array_new(typeInfo, len + NEW_MOVES_COUNT);
     uint32_t idx = len;
 
-    AddGET_FUNC_TABLE_ELEM(getFuncTable, &idx, WAZA_NO_JUMP_KICK, (Il2CppMethodPointer) &ADD_JumpKick);
-    AddGET_FUNC_TABLE_ELEM(getFuncTable, &idx, WAZA_NO_RETURN, (Il2CppMethodPointer) &ADD_Return);
-    AddGET_FUNC_TABLE_ELEM(getFuncTable, &idx, WAZA_NO_FRUSTRATION, (Il2CppMethodPointer) &ADD_Frustration);
+    SetMoveFunctionTable(getFuncTable, &idx, JUMP_KICK_ID, (Il2CppMethodPointer) &ADD_JumpKick);
+    SetMoveFunctionTable(getFuncTable, &idx, RETURN_ID, (Il2CppMethodPointer) &ADD_Return);
+    SetMoveFunctionTable(getFuncTable, &idx, FRUSTRATION_ID, (Il2CppMethodPointer) &ADD_Frustration);
 
     return getFuncTable;
 }

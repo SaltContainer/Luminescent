@@ -59,21 +59,51 @@ namespace Dpr
 
             struct BTL_POKEPARAM_o
             {
-                // 0242da00
                 bool CONFRONT_REC_IsMatch(uint8_t pokeID, MethodInfo *method);
-                // 02429d60
                 uint16_t GetItem(MethodInfo *method);
-
-                uint32_t GetPokeSick(MethodInfo *method);
-
                 uint8_t GetFriendship(MethodInfo *method);
-
+                uint16_t GetMonsNo(MethodInfo *method);
+                uint32_t GetPokeSick(MethodInfo *method);
                 Pml::PokePara::CoreParam * GetSrcDataConst(MethodInfo *method);
+                int32_t GetValue(int32_t valueID,MethodInfo *method);
+                bool HENSIN_Check(MethodInfo *method);
+                bool IsDead(MethodInfo *method);
 
 
                 BTL_POKEPARAM_c *klass;
                 void *monitor;
                 BTL_POKEPARAM_Fields fields;
+            };
+            enum BTL_POKEPARAM_ValueID {
+                BPP_VALUE_NULL,
+                BPP_ATTACK_RANK,
+                BPP_DEFENCE_RANK,
+                BPP_SP_ATTACK_RANK,
+                BPP_SP_DEFENCE_RANK,
+                BPP_AGILITY_RANK,
+                BPP_HIT_RATIO,
+                BPP_AVOID_RATIO,
+                BPP_ATTACK,
+                BPP_DEFENCE,
+                BPP_SP_ATTACK,
+                BPP_SP_DEFENCE,
+                BPP_AGILITY,
+                BPP_HP,
+                BPP_HP_BEFORE_G,
+                BPP_MAX_HP,
+                BPP_MAX_HP_BEFORE_G,
+                BPP_LEVEL,
+                BPP_TOKUSEI,
+                BPP_TOKUSEI_EFFECTIVE,
+                BPP_SEX,
+                BPP_SEIKAKU,
+                BPP_PERSONAL_RAND,
+                BPP_EXP,
+                BPP_MONS_POW,
+                BPP_MONS_AGILITY,
+                BPP_RANKVALUE_START = 1,
+                BPP_RANKVALUE_END = 7,
+                BPP_RANKVALUE_RANGE = 7
             };
         }
     }

@@ -1,3 +1,0 @@
-[target=main, version=bd_130]
-1964f24:
-    bl Tokusei_system_array_new
