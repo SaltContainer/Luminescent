@@ -32,6 +32,11 @@
 204aaf0:
     b Pml_PokePara_CoreParam_GetType2
 
+// Implement Unseen Fist
+// Section_CheckNotEffect_Guard$$check_Mamoru
+21b1700:
+    b Dpr_Battle_Logic_Section_CheckNotEffect_Guard_check_Mamoru
+
 // Change Flower Gift
 // Tokusei$$handler_FlowerGift_Weather
 1942720:

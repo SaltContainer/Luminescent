@@ -1,6 +1,7 @@
 #pragma once
 
 #include "il2cpp.hpp"
+#include "PokeActionContainer.hpp"
 
 namespace Dpr
 {

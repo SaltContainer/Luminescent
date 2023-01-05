@@ -68,12 +68,15 @@ namespace Dpr
                 int32_t GetValue(int32_t valueID,MethodInfo *method);
                 bool HENSIN_Check(MethodInfo *method);
                 bool IsDead(MethodInfo *method);
+                bool IsMatchTokusei(int32_t tokusei, MethodInfo *method);
+                bool TURNFLAG_Get(int32_t flagID, MethodInfo *method);
 
 
                 BTL_POKEPARAM_c *klass;
                 void *monitor;
                 BTL_POKEPARAM_Fields fields;
             };
+
             enum BTL_POKEPARAM_ValueID {
                 BPP_VALUE_NULL,
                 BPP_ATTACK_RANK,
@@ -104,6 +107,37 @@ namespace Dpr
                 BPP_RANKVALUE_START = 1,
                 BPP_RANKVALUE_END = 7,
                 BPP_RANKVALUE_RANGE = 7
+            };
+
+            enum BTL_POKEPARAM_TurnFlag {
+                TURNFLG_ACTION_START,
+                TURNFLG_ACTION_DONE,
+                TURNFLG_DAMAGED,
+                TURNFLG_WAZAPROC_DONE,
+                TURNFLG_SHRINK,
+                TURNFLG_KIAI_READY,
+                TURNFLG_KIAI_SHRINK,
+                TURNFLG_MAMORU,
+                TURNFLG_ITEM_CONSUMED,
+                TURNFLG_ITEM_CANT_USE,
+                TURNFLG_COMBIWAZA_READY,
+                TURNFLG_TAMEHIDE_OFF,
+                TURNFLG_MOVED,
+                TURNFLG_TURNCHECK_SICK_PASSED,
+                TURNFLG_HITRATIO_UP,
+                TURNFLG_NAGETUKERU_USING,
+                TURNFLG_MAMORU_ONLY_DAMAGE_WAZA,
+                TURNFLG_RESERVE_ITEM_SPEND,
+                TURNFLG_APPEARED_BY_POKECHANGE,
+                TURNFLG_CANT_ACTION,
+                TURNFLG_TRAPPSHELL_READY,
+                TURNFLG_GWALL_BROKEN,
+                TURNFLG_RAIDBOSS_REINFORCE_DONE,
+                TURNFLG_RAIDBOSS_ANGRY,
+                TURNFLG_RAIDBOSS_ANGRY_WAZA_ADD_DONE,
+                TURNFLG_RANK_UP,
+                TURNFLG_RANK_DOWN,
+                TURNFLG_MAX
             };
         }
     }

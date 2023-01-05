@@ -1,20 +1,25 @@
-#include "Dpr/Battle/Logic/BtlStrType.hpp"
 #include "Dpr/Battle/Logic/BtlWeather.hpp"
 #include "Dpr/Battle/Logic/Calc.hpp"
 #include "Dpr/Battle/Logic/Common.hpp"
 #include "Dpr/Battle/Logic/DamageCause.hpp"
+#include "Dpr/Battle/Logic/DmgAffRec.hpp"
 #include "Dpr/Battle/Logic/EventFactor.hpp"
 #include "Dpr/Battle/Logic/EventID.hpp"
 #include "Dpr/Battle/Logic/EventVar.hpp"
 #include "Dpr/Battle/Logic/Handler.hpp"
 #include "Dpr/Battle/Logic/Handler/Tokusei.hpp"
+#include "Dpr/Battle/Logic/PokeSet.hpp"
 #include "Dpr/Battle/Logic/RankEffectCause.hpp"
+#include "Dpr/Battle/Logic/Section.hpp"
 #include "Dpr/Battle/Logic/Section_AddSick.hpp"
+#include "Dpr/Battle/Logic/Section_CheckNotEffect_Guard.hpp"
 #include "Dpr/Battle/Logic/Section_FromEvent_Damage.hpp"
 #include "Dpr/Battle/Logic/Section_FromEvent_FormChange.hpp"
 #include "Dpr/Battle/Logic/Section_FromEvent_RankEffect.hpp"
+#include "Dpr/Battle/Logic/Section_FromEvent_RankReset.hpp"
 #include "Dpr/Battle/Logic/SickCause.hpp"
 #include "Dpr/Battle/Logic/WAZADATA.hpp"
+#include "Dpr/Battle/Logic/WazaParam.hpp"
 #include "Pml/Personal/ParamID.hpp"
 #include "Pml/Personal/PersonalTableExtensions.hpp"
 #include "Pml/Personal/PersonalSystem.hpp"
@@ -22,6 +27,7 @@
 #include "Pml/PokePara/CoreParam.h"
 #include "Pml/PokePara/Sick.hpp"
 #include "Pml/WazaData/WazaDamageType.hpp"
+#include "Pml/WazaData/WazaFlag.hpp"
 #include "Pml/WazaData/WazaRankEffect.hpp"
 #include "Pml/WazaData/WazaSick.hpp"
 
@@ -40,45 +46,54 @@ using namespace Pml::WazaData;
 extern MethodInfo * Method_handler_TetunoKobusi;
 
 // AbilityIDs
-constexpr uint32_t FORECAST_ID = 59;
-constexpr uint32_t MULTITYPE_ID = 121;
-constexpr uint32_t FLOWER_GIFT_ID = 122;
-constexpr uint32_t ZEN_MODE_ID = 161;
-constexpr uint32_t STANCE_CHANGE_ID = 176;
-constexpr uint32_t SHIELDS_DOWN_ID = 197;
-constexpr uint32_t SCHOOLING_ID = 208;
-constexpr uint32_t DISGUISE_ID = 209;
-constexpr uint32_t BATTLE_BOND_ID = 210;
-constexpr uint32_t POWER_CONSTRUCT_ID = 211;
-constexpr uint32_t RKS_SYSTEM_ID = 225;
-constexpr uint32_t GULP_MISSILE_ID = 241;
-constexpr uint32_t ICE_FACE_ID = 248;
-constexpr uint32_t HUNGER_SWITCH_ID = 258;
+constexpr uint32_t FORECAST = 59;
+constexpr uint32_t MULTITYPE = 121;
+constexpr uint32_t FLOWER_GIFT = 122;
+constexpr uint32_t ZEN_MODE = 161;
+constexpr uint32_t STANCE_CHANGE = 176;
+constexpr uint32_t SHIELDS_DOWN = 197;
+constexpr uint32_t SCHOOLING = 208;
+constexpr uint32_t DISGUISE = 209;
+constexpr uint32_t BATTLE_BOND = 210;
+constexpr uint32_t POWER_CONSTRUCT = 211;
+constexpr uint32_t RKS_SYSTEM = 225;
+constexpr uint32_t GULP_MISSILE = 241;
+constexpr uint32_t ICE_FACE = 248;
+constexpr uint32_t HUNGER_SWITCH = 258;
+constexpr uint32_t QUICK_DRAW = 259;
+constexpr uint32_t UNSEEN_FIST = 260;
+constexpr uint32_t CURIOUS_MEDICINE = 261;
+constexpr uint32_t TRANSISTOR = 262;
+constexpr uint32_t DRAGONS_MAW = 263;
+constexpr uint32_t CHILLING_NEIGH = 264;
+constexpr uint32_t GRIM_NEIGH = 265;
+constexpr uint32_t AS_ONE0 = 266;
+constexpr uint32_t AS_ONE1 = 267;
 
 // MoveIDs
-constexpr uint32_t SURF_ID = 57;
-constexpr uint32_t DIVE_ID = 291;
-constexpr uint32_t KINGS_SHIELD_ID = 588;
-constexpr uint32_t WATER_SHURIKEN_ID = 594;
+constexpr uint32_t SURF = 57;
+constexpr uint32_t DIVE = 291;
+constexpr uint32_t KINGS_SHIELD = 588;
+constexpr uint32_t WATER_SHURIKEN = 594;
 
 // ItemIDs
-constexpr uint32_t FLAME_PLATE_ID = 298;
-constexpr uint32_t SPLASH_PLATE_ID = 299;
-constexpr uint32_t ZAP_PLATE_ID = 300;
-constexpr uint32_t MEADOW_PLATE_ID = 301;
-constexpr uint32_t ICICLE_PLATE_ID = 302;
-constexpr uint32_t FIST_PLATE_ID = 303;
-constexpr uint32_t TOXIC_PLATE_ID = 304;
-constexpr uint32_t EARTH_PLATE_ID = 305;
-constexpr uint32_t SKY_PLATE_ID = 306;
-constexpr uint32_t MIND_PLATE_ID = 307;
-constexpr uint32_t INSECT_PLATE_ID = 308;
-constexpr uint32_t STONE_PLATE_ID = 309;
-constexpr uint32_t SPOOKY_PLATE_ID = 310;
-constexpr uint32_t DRACO_PLATE_ID = 311;
-constexpr uint32_t DREAD_PLATE_ID = 312;
-constexpr uint32_t IRON_PLATE_ID = 313;
-constexpr uint32_t PIXIE_PLATE_ID = 644;
+constexpr uint32_t FLAME_PLATE = 298;
+constexpr uint32_t SPLASH_PLATE = 299;
+constexpr uint32_t ZAP_PLATE = 300;
+constexpr uint32_t MEADOW_PLATE = 301;
+constexpr uint32_t ICICLE_PLATE = 302;
+constexpr uint32_t FIST_PLATE = 303;
+constexpr uint32_t TOXIC_PLATE = 304;
+constexpr uint32_t EARTH_PLATE = 305;
+constexpr uint32_t SKY_PLATE = 306;
+constexpr uint32_t MIND_PLATE = 307;
+constexpr uint32_t INSECT_PLATE = 308;
+constexpr uint32_t STONE_PLATE = 309;
+constexpr uint32_t SPOOKY_PLATE = 310;
+constexpr uint32_t DRACO_PLATE = 311;
+constexpr uint32_t DREAD_PLATE = 312;
+constexpr uint32_t IRON_PLATE = 313;
+constexpr uint32_t PIXIE_PLATE = 644;
 constexpr uint32_t FIRIUM_Z = 777;
 constexpr uint32_t WATERIUM_Z = 778;
 constexpr uint32_t ELECTRIUM_Z = 779;
@@ -114,11 +129,31 @@ constexpr uint32_t DRAGON_MEMORY = 918;
 constexpr uint32_t DARK_MEMORY = 919;
 constexpr uint32_t FAIRY_MEMORY = 920;
 
+// TypeIDs
+constexpr uint32_t NORMAL = 0;
+constexpr uint32_t FIGHTING = 1;
+constexpr uint32_t FLYING = 2;
+constexpr uint32_t POISON = 3;
+constexpr uint32_t GROUND = 4;
+constexpr uint32_t ROCK = 5;
+constexpr uint32_t BUG = 6;
+constexpr uint32_t GHOST = 7;
+constexpr uint32_t STEEL = 8;
+constexpr uint32_t FIRE = 9;
+constexpr uint32_t WATER = 10;
+constexpr uint32_t GRASS = 11;
+constexpr uint32_t ELECTRIC = 12;
+constexpr uint32_t PSYCHIC = 13;
+constexpr uint32_t ICE = 14;
+constexpr uint32_t DRAGON = 15;
+constexpr uint32_t DARK = 16;
+constexpr uint32_t FAIRY = 17;
+
 // Remember to update when adding handlers
-const uint32_t NEW_ABILITIES_COUNT = 10;
+const uint32_t NEW_ABILITIES_COUNT = 18;
 
 // HandlerTables
-static System::Array<EventFactor_EventHandlerTable_o *> * sHandlerTableZenMode;
+static System::Array<EventFactor_EventHandlerTable_o *> * sHandlerTableZenMode;//0
 static System::Array<EventFactor_EventHandlerTable_o *> * sHandlerTableStanceChange;
 static System::Array<EventFactor_EventHandlerTable_o *> * sHandlerTableShieldsDown;
 static System::Array<EventFactor_EventHandlerTable_o *> * sHandlerTableSchooling;
@@ -128,7 +163,14 @@ static System::Array<EventFactor_EventHandlerTable_o *> * sHandlerTablePowerCons
 static System::Array<EventFactor_EventHandlerTable_o *> * sHandlerTableGulpMissile;
 static System::Array<EventFactor_EventHandlerTable_o *> * sHandlerTableIceFace;
 static System::Array<EventFactor_EventHandlerTable_o *> * sHandlerTableHungerSwitch;
-
+static System::Array<EventFactor_EventHandlerTable_o *> * sHandlerTableQuickDraw;//10
+static System::Array<EventFactor_EventHandlerTable_o *> * sHandlerTableCuriousMedicine;
+static System::Array<EventFactor_EventHandlerTable_o *> * sHandlerTableTransistor;
+static System::Array<EventFactor_EventHandlerTable_o *> * sHandlerTableDragonsMaw;
+static System::Array<EventFactor_EventHandlerTable_o *> * sHandlerTableChillingNeigh;
+static System::Array<EventFactor_EventHandlerTable_o *> * sHandlerTableGrimNeigh;
+static System::Array<EventFactor_EventHandlerTable_o *> * sHandlerTableAsOne0;
+static System::Array<EventFactor_EventHandlerTable_o *> * sHandlerTableAsOne1;
 
 // --- EventHandler delegates ---
 uint8_t HighestMultiple(uint8_t max, uint8_t factor) {
@@ -148,114 +190,150 @@ void HandlerFormChange(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, ui
     desc->fields.isDontResetFormByOut = persistOnSwitch;
     desc->fields.isDisplayTokuseiWindow = displayAbility;
     desc->fields.isDisplayChangeEffect = animationEnabled;
-    desc->fields.successMessage->Setup(BtlStrType::BTL_STRTYPE_SET, 304, nullptr);
-    desc->fields.successMessage->AddArg(pokeID, nullptr);
+    //desc->fields.successMessage->Setup(BtlStrType::BTL_STRTYPE_SET, 304, nullptr);
+    //desc->fields.successMessage->AddArg(pokeID, nullptr);
     Common::FormChange(args, &desc, nullptr);
+}
+void HandlerMessage(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, bool displayAbility) {
+    system_load_typeinfo((void *)0x58d8);
+    Section_FromEvent_Message::Description_o *desc = (Section_FromEvent_Message::Description_o *)
+            il2cpp_object_new(Section_FromEvent_Message::Description_TypeInfo);
+    desc->ctor(nullptr);
+    desc->fields.pokeID = pokeID;
+    desc->fields.isDisplayTokuseiWindow = displayAbility;
+    Common::Message(args, &desc, nullptr);
+}
+void HandlerRankEffect(EventFactor_EventHandlerArgs_o **args, uint8_t causePokeID, uint8_t targetPokeID,
+                       int32_t rankType, uint8_t rankVolume, bool displayAbility, bool ignoreSubstitute,
+                       bool messageOnFail) {
+    system_load_typeinfo((void *)0x89b2);
+    Section_FromEvent_RankEffect_Description_o *rankEffectDesc = (Section_FromEvent_RankEffect_Description_o *)
+            il2cpp_object_new(Section_FromEvent_RankEffect_Description_TypeInfo);
+    rankEffectDesc->ctor(nullptr);
+    rankEffectDesc->fields.pokeID = causePokeID;
+    rankEffectDesc->fields.targetPokeCount = 1;
+    rankEffectDesc->fields.targetPokeID->m_Items[0] = targetPokeID;
+    rankEffectDesc->fields.rankType = rankType;
+    rankEffectDesc->fields.rankVolume = rankVolume;
+    rankEffectDesc->fields.cause = RankEffectCause::OTHER;
+    rankEffectDesc->fields.isDisplayTokuseiWindow = displayAbility;
+    rankEffectDesc->fields.isMigawariThrew = ignoreSubstitute;
+    rankEffectDesc->fields.isSpFailMessageDisplay = messageOnFail;
+    Common::RankEffect(args,&rankEffectDesc,(MethodInfo *)0x0);
+}
+void HandlerRankReset(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID) {
+    system_load_typeinfo((void *)0xa911);
+    Section_FromEvent_RankReset_Description_o *desc = (Section_FromEvent_RankReset_Description_o *)
+            il2cpp_object_new(Section_FromEvent_RankReset_Description_TypeInfo);
+    desc->ctor(nullptr);
+    desc->fields.pokeCount = 1;
+    desc->fields.pokeID->m_Items[0] = pokeID;
+    Common::RankReset(args,&desc, nullptr);
 }
 uint8_t MultitypeType(uint32_t itemNo) {
     switch (itemNo) {
-        case FIST_PLATE_ID:
+        case FIST_PLATE:
         case FIGHTINIUM_Z:
-            return 1;
-        case SKY_PLATE_ID:
+            return FIGHTING;
+        case SKY_PLATE:
         case FLYINIUM_Z:
-            return 2;
-        case TOXIC_PLATE_ID:
+            return FLYING;
+        case TOXIC_PLATE:
         case POISONIUM_Z:
-            return 3;
-        case EARTH_PLATE_ID:
+            return POISON;
+        case EARTH_PLATE:
         case GROUNDIUM_Z:
-            return 4;
-        case STONE_PLATE_ID:
+            return GROUND;
+        case STONE_PLATE:
         case ROCKIUM_Z:
-            return 5;
-        case INSECT_PLATE_ID:
+            return ROCK;
+        case INSECT_PLATE:
         case BUGINIUM_Z:
-            return 6;
-        case SPOOKY_PLATE_ID:
+            return BUG;
+        case SPOOKY_PLATE:
         case GHOSTIUM_Z:
-            return 7;
-        case IRON_PLATE_ID:
+            return GHOST;
+        case IRON_PLATE:
         case STEELIUM_Z:
-            return 8;
-        case FLAME_PLATE_ID:
+            return STEEL;
+        case FLAME_PLATE:
         case FIRIUM_Z:
-            return 9;
-        case SPLASH_PLATE_ID:
+            return FIRE;
+        case SPLASH_PLATE:
         case WATERIUM_Z:
-            return 10;
-        case MEADOW_PLATE_ID:
+            return WATER;
+        case MEADOW_PLATE:
         case GRASSIUM_Z:
-            return 11;
-        case ZAP_PLATE_ID:
+            return GRASS;
+        case ZAP_PLATE:
         case ELECTRIUM_Z:
-            return 12;
-        case MIND_PLATE_ID:
+            return ELECTRIC;
+        case MIND_PLATE:
         case PSYCHIUM_Z:
-            return 13;
-        case ICICLE_PLATE_ID:
+            return PSYCHIC;
+        case ICICLE_PLATE:
         case ICIUM_Z:
-            return 14;
-        case DRACO_PLATE_ID:
+            return ICE;
+        case DRACO_PLATE:
         case DRAGONIUM_Z:
-            return 15;
-        case DREAD_PLATE_ID:
+            return DRAGON;
+        case DREAD_PLATE:
         case DARKINIUM_Z:
-            return 16;
-        case PIXIE_PLATE_ID:
+            return DARK;
+        case PIXIE_PLATE:
         case FAIRIUM_Z:
-            return 17;
+            return FAIRY;
         default:
-            return 0;
+            return NORMAL;
     }
 }
 uint8_t RKSSystemType(uint32_t itemNo) {
     switch (itemNo) {
         case FIGHTING_MEMORY:
-            return 1;
+            return FIGHTING;
         case FLYING_MEMORY:
-            return 2;
+            return FLYING;
         case POISON_MEMORY:
-            return 3;
+            return POISON;
         case GROUND_MEMORY:
-            return 4;
+            return GROUND;
         case ROCK_MEMORY:
-            return 5;
+            return ROCK;
         case BUG_MEMORY:
-            return 6;
+            return BUG;
         case GHOST_MEMORY:
-            return 7;
+            return GHOST;
         case STEEL_MEMORY:
-            return 8;
+            return STEEL;
         case FIRE_MEMORY:
-            return 9;
+            return FIRE;
         case WATER_MEMORY:
-            return 10;
+            return WATER;
         case GRASS_MEMORY:
-            return 11;
+            return GRASS;
         case ELECTRIC_MEMORY:
-            return 12;
+            return ELECTRIC;
         case PSYCHIC_MEMORY:
-            return 13;
+            return PSYCHIC;
         case ICE_MEMORY:
-            return 14;
+            return ICE;
         case DRAGON_MEMORY:
-            return 15;
+            return DRAGON;
         case DARK_MEMORY:
-            return 16;
+            return DARK;
         case FAIRY_MEMORY:
-            return 17;
+            return FAIRY;
         default:
-            return 0;
+            return NORMAL;
     }
 }
 uint8_t GetType(CoreParam *cp, int32_t paramID) {
     Accessor *a = cp->fields.m_accessor;
     int32_t tokuseiNo = a->GetTokuseiNo(nullptr);
     uint32_t itemNo = a->GetItemNo(nullptr);
-    if (tokuseiNo == MULTITYPE_ID)
+    if (tokuseiNo == MULTITYPE)
         return MultitypeType(itemNo);
-    if (tokuseiNo == RKS_SYSTEM_ID)
+    if (tokuseiNo == RKS_SYSTEM)
         return RKSSystemType(itemNo);
     return PersonalTableExtensions::GetParam(
             PersonalSystem::GetPersonalData(a->GetMonsNo(nullptr),
@@ -269,6 +347,38 @@ uint8_t Pml_PokePara_CoreParam_GetType1(CoreParam *cp, MethodInfo *method) {
 }
 uint8_t Pml_PokePara_CoreParam_GetType2(CoreParam *cp, MethodInfo *method) {
     return GetType(cp, ParamID::TYPE2);
+}
+void Dpr_Battle_Logic_Section_CheckNotEffect_Guard_check_Mamoru(Section_CheckNotEffect_Guard_o *__this,
+                                                                BTL_POKEPARAM_o *attacker, WazaParam_o *wazaParam,
+                                                                DmgAffRec_o *affinityRecorder, PokeSet_o *targets,
+                                                                MethodInfo *method) {
+    int32_t wazaID = wazaParam->fields.wazaID;
+    bool affectedByProtect = WAZADATA::GetFlag(wazaID, WazaFlag::MAMORU, nullptr) &&
+            !(WAZADATA::GetFlag(wazaID, WazaFlag::TOUCH, nullptr) &&
+            attacker->IsMatchTokusei(UNSEEN_FIST, nullptr));
+    if (!affectedByProtect) return;
+    targets->SeekStart(nullptr);
+    BTL_POKEPARAM_o *defender = targets->SeekNext(nullptr);
+    while (defender != nullptr) {
+        bool protectTurnFlag = defender->TURNFLAG_Get(BTL_POKEPARAM_TurnFlag::TURNFLG_MAMORU,
+                                                      nullptr);
+        if ((!protectTurnFlag &&
+        !__this->isNoEffectByMamoru_Others(attacker, defender, wazaParam, affinityRecorder, method)) ||
+        (protectTurnFlag &&
+        defender->TURNFLAG_Get(BTL_POKEPARAM_TurnFlag::TURNFLG_MAMORU_ONLY_DAMAGE_WAZA, nullptr) &&
+        !WAZADATA::IsDamage(wazaID, nullptr))) {
+            defender = targets->SeekNext(nullptr);
+            continue;
+        }
+        bool messageDisplay = wazaParam->canInvalidMessageDisplay(targets->fields.m_count, nullptr);
+        targets->Remove(defender, nullptr);
+        if (!((Section_o *)__this)->GetActionSharedData(nullptr)->fields.isWazaFailMessageDisplayed &&
+        messageDisplay) {
+            __this->onMamoruSuccess(attacker, defender, wazaParam, nullptr);
+        }
+        ((Section_o *)__this)->GetActionSharedData(nullptr)->fields.isWazaFailMessageDisplayed = false;
+        defender = targets->SeekNext(nullptr);
+    }
 }
 // Forecast
 uint8_t HandlerForecastGetFormID(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID) {
@@ -414,10 +524,10 @@ void HandlerStanceChangeWazaCallDecide(EventFactor_EventHandlerArgs_o **args, ui
     BTL_POKEPARAM_o * bpp = Common::GetPokeParam(args,pokeID, nullptr);
     //if (bpp->HENSIN_Check(nullptr)) return;
     int32_t wazaID = Common::GetEventVar(args, EventVar::WAZAID, nullptr);
-    int32_t damageType = WAZADATA::GetDamageType(wazaID, nullptr);
-    if (wazaID != KINGS_SHIELD_ID && damageType == WazaDamageType::NONE) return;
+    bool isDamage = WAZADATA::IsDamage(wazaID, nullptr);
+    if (wazaID != KINGS_SHIELD && !isDamage) return;
     uint8_t nextForm = HighestMultiple(bpp->fields.m_formNo, 2);
-    if (damageType > 0)
+    if (isDamage)
         nextForm += 1;
     if (nextForm >= PersonalSystem::GetPersonalData(bpp->GetMonsNo(nullptr), 0,
                                                     nullptr)->fields.form_max) return;
@@ -532,14 +642,14 @@ uint8_t HandlerBattleBondGetFormID(uint8_t formNo, uint8_t targetFormNo) {
 }
 void HandlerBattleBondWazaHitCount(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method) {
     if (Common::GetEventVar(args, EventVar::POKEID_ATK, nullptr) != pokeID) return;
-    if (Common::GetEventVar(args, EventVar::WAZAID, nullptr) != WATER_SHURIKEN_ID) return;
+    if (Common::GetEventVar(args, EventVar::WAZAID, nullptr) != WATER_SHURIKEN) return;
     uint8_t formNo = Common::GetPokeParam(args,pokeID, nullptr)->fields.m_formNo;
     if (formNo != HandlerBattleBondGetFormID(formNo, 2)) return;
     Common::RewriteEventVar(args, EventVar::HITCOUNT, 3, nullptr);
 }
 void HandlerBattleBondWazaPower(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method) {
     if (Common::GetEventVar(args, EventVar::POKEID_ATK, nullptr) != pokeID) return;
-    if (Common::GetEventVar(args, EventVar::WAZAID, nullptr) != WATER_SHURIKEN_ID) return;
+    if (Common::GetEventVar(args, EventVar::WAZAID, nullptr) != WATER_SHURIKEN) return;
     uint8_t formNo = Common::GetPokeParam(args,pokeID, nullptr)->fields.m_formNo;
     if (formNo != HandlerBattleBondGetFormID(formNo, 2)) return;
     Common::RewriteEventVar(args, EventVar::WAZA_POWER, Common::GetEventVar(args, EventVar::WAZA_POWER,
@@ -547,7 +657,7 @@ void HandlerBattleBondWazaPower(EventFactor_EventHandlerArgs_o **args, uint8_t p
 }
 void HandlerBattleBondDamageprocEndHitReal(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method) {
     if (Common::CheckShowDown(args, nullptr)) return;
-    if (Common::GetKillCount(args, pokeID, nullptr) != 1) return;
+    if (Common::GetKillCount(args, pokeID, nullptr) == 0) return;
     uint8_t formNo = Common::GetPokeParam(args,pokeID, nullptr)->fields.m_formNo;
     if (formNo == HandlerBattleBondGetFormID(formNo, 2)) return;
     uint8_t nextForm = HandlerBattleBondGetFormID(formNo, 2);
@@ -587,7 +697,7 @@ uint8_t HandlerGulpMissileGetFormID(uint8_t formNo, uint8_t targetFormNo) {
 void HandlerGulpMissileWazaseqEnd(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method) {
     if (Common::GetEventVar(args, EventVar::POKEID_ATK, nullptr) != pokeID) return;
     int32_t wazaID = Common::GetEventVar(args, EventVar::WAZAID, nullptr);
-    if (wazaID != SURF_ID && wazaID != DIVE_ID) return;
+    if (wazaID != SURF && wazaID != DIVE) return;
     BTL_POKEPARAM_o * bpp = Common::GetPokeParam(args, pokeID, nullptr);
     uint8_t formNo = bpp->fields.m_formNo;
     if (formNo != HandlerGulpMissileGetFormID(formNo, 0)) return;
@@ -596,7 +706,7 @@ void HandlerGulpMissileWazaseqEnd(EventFactor_EventHandlerArgs_o **args, uint8_t
     Calc::QuotMaxHP_Zero(bpp, 2, false, nullptr)));
     if (nextForm >= PersonalSystem::GetPersonalData(bpp->GetMonsNo(nullptr), 0,
                                                     nullptr)->fields.form_max) return;
-    HandlerFormChange(args, pokeID, nextForm, false, true, wazaID != DIVE_ID);
+    HandlerFormChange(args, pokeID, nextForm, false, true, wazaID != DIVE);
 }
 void HandlerGulpMissileWazaDmgReaction(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method) {
     system_load_typeinfo((void *)0x8a36);
@@ -623,19 +733,8 @@ void HandlerGulpMissileWazaDmgReaction(EventFactor_EventHandlerArgs_o **args, ui
         damageDesc->fields.isDisplayTokuseiWindow = true;
         Common::Damage(args,&damageDesc, nullptr);
         if (formNo == HandlerGulpMissileGetFormID(formNo, 1)) {
-            Section_FromEvent_RankEffect_Description_o *rankEffectDesc = (Section_FromEvent_RankEffect_Description_o *)
-                    il2cpp_object_new(Section_FromEvent_RankEffect_Description_TypeInfo);
-            rankEffectDesc->ctor(nullptr);
-            rankEffectDesc->fields.rankType = WazaRankEffect::DEFENCE;
-            rankEffectDesc->fields.rankVolume = -1;
-            rankEffectDesc->fields.cause = RankEffectCause::OTHER;
-            rankEffectDesc->fields.pokeID = pokeID;
-            rankEffectDesc->fields.targetPokeCount = 1;
-            rankEffectDesc->fields.targetPokeID->m_Items[0] = (uint8_t)pokeIDAtk;
-            rankEffectDesc->fields.isDisplayTokuseiWindow = false;
-            rankEffectDesc->fields.isMigawariThrew = false;
-            rankEffectDesc->fields.isSpFailMessageDisplay = true;
-            Common::RankEffect(args,&rankEffectDesc,(MethodInfo *)0x0);
+            HandlerRankEffect(args, pokeID, pokeIDAtk, WazaRankEffect::DEFENCE,
+                              -1, false, false, true);
         }
         else {
             Section_AddSick_Description_o *addSickDesc = (Section_AddSick_Description_o *)
@@ -716,6 +815,72 @@ void HandlerHungerSwitchTurncheckDone(EventFactor_EventHandlerArgs_o **args, uin
     if (nextForm >= PersonalSystem::GetPersonalData(bpp->GetMonsNo(nullptr), 0,
                                                     nullptr)->fields.form_max) return;
     HandlerFormChange(args, pokeID, nextForm, false, true, true);
+}
+// Quick Draw
+void HandlerQuickDrawCheckSpPriority(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method) {
+    if (Common::GetEventVar(args, EventVar::SP_PRIORITY, nullptr) != 1) return;
+    if (Common::GetEventVar(args, EventVar::POKEID, nullptr) != pokeID) return;
+    PokeAction_o *pokeAction = Common::SearchByPokeID(args, pokeID, true, true, nullptr);
+    if (pokeAction == nullptr) return;
+    if (!WAZADATA::IsDamage(PokeAction::GetWazaID(pokeAction, nullptr),nullptr)) return;
+    if ((*args)->fields.pPokeActionContainer->IsAllActDoneByPokeID(pokeID, nullptr)) return;
+    if (Common::GetWorkValue(args, 0, nullptr) == 0) {
+        Common::SetWorkValue(args, 0, 1, nullptr);
+        Common::SetWorkValue(args, 1, Calc::IsOccurPer(30, nullptr), nullptr);
+    }
+    if (Common::GetWorkValue(args, 1, nullptr) == 0) return;
+    bool success = Common::RewriteEventVar(args, EventVar::SP_PRIORITY, 2, nullptr);
+    if (!success) return;
+    if (Common::GetWorkValue(args, 2, nullptr) != 0) return;
+    Common::SetWorkValue(args, 2, 1, nullptr);
+    HandlerMessage(args, pokeID, true);
+}
+void HandlerQuickDrawTurncheckDone(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method) {
+    if (Common::GetEventVar(args, EventVar::POKEID, nullptr) != pokeID) return;
+    Common::SetWorkValue(args, 0, 0, nullptr);
+    Common::SetWorkValue(args, 1, 0, nullptr);
+    Common::SetWorkValue(args, 2, 0, nullptr);
+}
+// Curious Medicine
+void HandlerCuriousMedicineMemberInEvo(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method) {
+    uint8_t targetPokeID = Common::GetEventVar(args, EventVar::POKEID, nullptr);
+    if (targetPokeID == pokeID) return;
+    if (!Common::IsFriendPokeID(args, pokeID, targetPokeID, nullptr)) return;
+    if (Common::GetWorkValue(args, 0, nullptr) == 0) {
+        Common::SetWorkValue(args, 0, 1, nullptr);
+        HandlerMessage(args, pokeID, true);
+    }
+    HandlerRankReset(args, targetPokeID);
+}
+// Transistor
+void HandlerTransistorAttackerPower(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method) {
+    if (Common::GetEventVar(args, EventVar::POKEID_ATK, nullptr) != pokeID) return;
+    if (Common::GetEventVar(args, EventVar::WAZA_TYPE, nullptr) != ELECTRIC) return;
+    Common::MulEventVar(args, EventVar::RATIO, 0x1800, nullptr);
+}
+// Dragon's Maw
+void HandlerDragonsMawAttackerPower(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method) {
+    if (Common::GetEventVar(args, EventVar::POKEID_ATK, nullptr) != pokeID) return;
+    if (Common::GetEventVar(args, EventVar::WAZA_TYPE, nullptr) != DRAGON) return;
+    Common::MulEventVar(args, EventVar::RATIO, 0x1800, nullptr);
+}
+// Chilling Neigh
+void HandlerChillingNeighDamageprocEndHitReal(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID,
+                                              MethodInfo *method) {
+    if (Common::CheckShowDown(args, nullptr)) return;
+    uint32_t killCount = Common::GetKillCount(args, pokeID, nullptr);
+    if (killCount == 0) return;
+    HandlerRankEffect(args, pokeID, pokeID, WazaRankEffect::ATTACK,
+                      killCount, true, true, false);
+}
+// Grim Neigh
+void HandlerGrimNeighDamageprocEndHitReal(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID,
+                                              MethodInfo *method) {
+    if (Common::CheckShowDown(args, nullptr)) return;
+    uint32_t killCount = Common::GetKillCount(args, pokeID, nullptr);
+    if (killCount == 0) return;
+    HandlerRankEffect(args, pokeID, pokeID, WazaRankEffect::SP_ATTACK,
+                      killCount, true, true, false);
 }
 
 EventFactor_EventHandlerTable_o * CreateAbilityEventHandler(uint16_t eventID, Il2CppMethodPointer methodPointer) {
@@ -817,6 +982,75 @@ System::Array<EventFactor_EventHandlerTable_o *> * ADD_HungerSwitch(MethodInfo *
     }
     return sHandlerTableHungerSwitch;
 }
+System::Array<EventFactor_EventHandlerTable_o *> * ADD_QuickDraw(MethodInfo *method)
+{
+    if (sHandlerTableQuickDraw == nullptr) {
+        sHandlerTableQuickDraw = (System::Array<EventFactor_EventHandlerTable_o *> *) system_array_new(EventFactor_EventHandlerTable_Array_TypeInfo, 2);
+        sHandlerTableQuickDraw->m_Items[0] = CreateAbilityEventHandler(EventID::CHECK_SP_PRIORITY, (Il2CppMethodPointer) &HandlerQuickDrawCheckSpPriority);
+        sHandlerTableQuickDraw->m_Items[1] = CreateAbilityEventHandler(EventID::TURNCHECK_DONE, (Il2CppMethodPointer) &HandlerQuickDrawTurncheckDone);
+    }
+    return sHandlerTableQuickDraw;
+}
+System::Array<EventFactor_EventHandlerTable_o *> * ADD_CuriousMedicine(MethodInfo *method)
+{
+    if (sHandlerTableCuriousMedicine == nullptr) {
+        sHandlerTableCuriousMedicine = (System::Array<EventFactor_EventHandlerTable_o *> *) system_array_new(EventFactor_EventHandlerTable_Array_TypeInfo, 1);
+        sHandlerTableCuriousMedicine->m_Items[0] = CreateAbilityEventHandler(EventID::MEMBER_IN_EVO, (Il2CppMethodPointer) &HandlerCuriousMedicineMemberInEvo);
+    }
+    return sHandlerTableCuriousMedicine;
+}
+System::Array<EventFactor_EventHandlerTable_o *> * ADD_Transistor(MethodInfo *method)
+{
+    if (sHandlerTableTransistor == nullptr) {
+        sHandlerTableTransistor = (System::Array<EventFactor_EventHandlerTable_o *> *) system_array_new(EventFactor_EventHandlerTable_Array_TypeInfo, 1);
+        sHandlerTableTransistor->m_Items[0] = CreateAbilityEventHandler(EventID::ATTACKER_POWER, (Il2CppMethodPointer) &HandlerTransistorAttackerPower);
+    }
+    return sHandlerTableTransistor;
+}
+System::Array<EventFactor_EventHandlerTable_o *> * ADD_DragonsMaw(MethodInfo *method)
+{
+    if (sHandlerTableDragonsMaw == nullptr) {
+        sHandlerTableDragonsMaw = (System::Array<EventFactor_EventHandlerTable_o *> *) system_array_new(EventFactor_EventHandlerTable_Array_TypeInfo, 1);
+        sHandlerTableDragonsMaw->m_Items[0] = CreateAbilityEventHandler(EventID::ATTACKER_POWER, (Il2CppMethodPointer) &HandlerDragonsMawAttackerPower);
+    }
+    return sHandlerTableDragonsMaw;
+}
+System::Array<EventFactor_EventHandlerTable_o *> * ADD_ChillingNeigh(MethodInfo *method)
+{
+    if (sHandlerTableChillingNeigh == nullptr) {
+        sHandlerTableChillingNeigh = (System::Array<EventFactor_EventHandlerTable_o *> *) system_array_new(EventFactor_EventHandlerTable_Array_TypeInfo, 1);
+        sHandlerTableChillingNeigh->m_Items[0] = CreateAbilityEventHandler(EventID::DAMAGEPROC_END_HIT_REAL, (Il2CppMethodPointer) &HandlerChillingNeighDamageprocEndHitReal);
+    }
+    return sHandlerTableChillingNeigh;
+}
+System::Array<EventFactor_EventHandlerTable_o *> * ADD_GrimNeigh(MethodInfo *method)
+{
+    if (sHandlerTableGrimNeigh == nullptr) {
+        sHandlerTableGrimNeigh = (System::Array<EventFactor_EventHandlerTable_o *> *) system_array_new(EventFactor_EventHandlerTable_Array_TypeInfo, 1);
+        sHandlerTableGrimNeigh->m_Items[0] = CreateAbilityEventHandler(EventID::DAMAGEPROC_END_HIT_REAL, (Il2CppMethodPointer) &HandlerGrimNeighDamageprocEndHitReal);
+    }
+    return sHandlerTableGrimNeigh;
+}
+System::Array<EventFactor_EventHandlerTable_o *> * ADD_AsOne0(MethodInfo *method)
+{
+    if (sHandlerTableAsOne0 == nullptr) {
+        sHandlerTableAsOne0 = (System::Array<EventFactor_EventHandlerTable_o *> *) system_array_new(EventFactor_EventHandlerTable_Array_TypeInfo, 3);
+        sHandlerTableAsOne0->m_Items[0] = CreateAbilityEventHandler(EventID::MEMBER_IN_PREV2, (Il2CppMethodPointer) &Tokusei::handler_Kinchoukan_MemberIn);
+        sHandlerTableAsOne0->m_Items[1] = CreateAbilityEventHandler(EventID::DAMAGEPROC_END_HIT_REAL, (Il2CppMethodPointer) &HandlerChillingNeighDamageprocEndHitReal);
+        sHandlerTableAsOne0->m_Items[2] = CreateAbilityEventHandler(EventID::CHANGE_TOKUSEI_AFTER, (Il2CppMethodPointer) &Tokusei::handler_Kinchoukan_MemberIn);
+    }
+    return sHandlerTableAsOne0;
+}
+System::Array<EventFactor_EventHandlerTable_o *> * ADD_AsOne1(MethodInfo *method)
+{
+    if (sHandlerTableAsOne1 == nullptr) {
+        sHandlerTableAsOne1 = (System::Array<EventFactor_EventHandlerTable_o *> *) system_array_new(EventFactor_EventHandlerTable_Array_TypeInfo, 3);
+        sHandlerTableAsOne1->m_Items[0] = CreateAbilityEventHandler(EventID::MEMBER_IN_PREV2, (Il2CppMethodPointer) &Tokusei::handler_Kinchoukan_MemberIn);
+        sHandlerTableAsOne1->m_Items[1] = CreateAbilityEventHandler(EventID::DAMAGEPROC_END_HIT_REAL, (Il2CppMethodPointer) &HandlerGrimNeighDamageprocEndHitReal);
+        sHandlerTableAsOne1->m_Items[2] = CreateAbilityEventHandler(EventID::CHANGE_TOKUSEI_AFTER, (Il2CppMethodPointer) &Tokusei::handler_Kinchoukan_MemberIn);
+    }
+    return sHandlerTableAsOne1;
+}
 
 //Adds an additional entry to GET_FUNC_TABLE
 void SetAbilityFunctionTable(System::Array<Tokusei_GET_FUNC_TABLE_ELEM_o> * getFuncTable, uint32_t * idx, int32_t tokusei, Il2CppMethodPointer methodPointer)
@@ -836,16 +1070,24 @@ void * Tokusei_system_array_new(void * typeInfo, uint32_t len)
     System::Array<Tokusei_GET_FUNC_TABLE_ELEM_o> * getFuncTable = (System::Array<Tokusei_GET_FUNC_TABLE_ELEM_o> *) system_array_new(typeInfo, len + NEW_ABILITIES_COUNT);
     uint32_t idx = len;
 
-    SetAbilityFunctionTable(getFuncTable, &idx, ZEN_MODE_ID, (Il2CppMethodPointer) &ADD_ZenMode);
-    SetAbilityFunctionTable(getFuncTable, &idx, STANCE_CHANGE_ID, (Il2CppMethodPointer) &ADD_StanceChange);
-    SetAbilityFunctionTable(getFuncTable, &idx, SHIELDS_DOWN_ID, (Il2CppMethodPointer) &ADD_ShieldsDown);
-    SetAbilityFunctionTable(getFuncTable, &idx, SCHOOLING_ID, (Il2CppMethodPointer) &ADD_Schooling);
-    SetAbilityFunctionTable(getFuncTable, &idx, DISGUISE_ID, (Il2CppMethodPointer) &ADD_Disguise);
-    SetAbilityFunctionTable(getFuncTable, &idx, BATTLE_BOND_ID, (Il2CppMethodPointer) &ADD_BattleBond);
-    SetAbilityFunctionTable(getFuncTable, &idx, POWER_CONSTRUCT_ID, (Il2CppMethodPointer) &ADD_PowerConstruct);
-    SetAbilityFunctionTable(getFuncTable, &idx, GULP_MISSILE_ID, (Il2CppMethodPointer) &ADD_GulpMissile);
-    SetAbilityFunctionTable(getFuncTable, &idx, ICE_FACE_ID, (Il2CppMethodPointer) &ADD_IceFace);
-    SetAbilityFunctionTable(getFuncTable, &idx, HUNGER_SWITCH_ID, (Il2CppMethodPointer) &ADD_HungerSwitch);
+    SetAbilityFunctionTable(getFuncTable, &idx, ZEN_MODE, (Il2CppMethodPointer) &ADD_ZenMode);
+    SetAbilityFunctionTable(getFuncTable, &idx, STANCE_CHANGE, (Il2CppMethodPointer) &ADD_StanceChange);
+    SetAbilityFunctionTable(getFuncTable, &idx, SHIELDS_DOWN, (Il2CppMethodPointer) &ADD_ShieldsDown);
+    SetAbilityFunctionTable(getFuncTable, &idx, SCHOOLING, (Il2CppMethodPointer) &ADD_Schooling);
+    SetAbilityFunctionTable(getFuncTable, &idx, DISGUISE, (Il2CppMethodPointer) &ADD_Disguise);
+    SetAbilityFunctionTable(getFuncTable, &idx, BATTLE_BOND, (Il2CppMethodPointer) &ADD_BattleBond);
+    SetAbilityFunctionTable(getFuncTable, &idx, POWER_CONSTRUCT, (Il2CppMethodPointer) &ADD_PowerConstruct);
+    SetAbilityFunctionTable(getFuncTable, &idx, GULP_MISSILE, (Il2CppMethodPointer) &ADD_GulpMissile);
+    SetAbilityFunctionTable(getFuncTable, &idx, ICE_FACE, (Il2CppMethodPointer) &ADD_IceFace);
+    SetAbilityFunctionTable(getFuncTable, &idx, HUNGER_SWITCH, (Il2CppMethodPointer) &ADD_HungerSwitch);
+    SetAbilityFunctionTable(getFuncTable, &idx, QUICK_DRAW, (Il2CppMethodPointer) &ADD_QuickDraw);
+    SetAbilityFunctionTable(getFuncTable, &idx, CURIOUS_MEDICINE, (Il2CppMethodPointer) &ADD_CuriousMedicine);
+    SetAbilityFunctionTable(getFuncTable, &idx, TRANSISTOR, (Il2CppMethodPointer) &ADD_Transistor);
+    SetAbilityFunctionTable(getFuncTable, &idx, DRAGONS_MAW, (Il2CppMethodPointer) &ADD_DragonsMaw);
+    SetAbilityFunctionTable(getFuncTable, &idx, CHILLING_NEIGH, (Il2CppMethodPointer) &ADD_ChillingNeigh);
+    SetAbilityFunctionTable(getFuncTable, &idx, GRIM_NEIGH, (Il2CppMethodPointer) &ADD_GrimNeigh);
+    SetAbilityFunctionTable(getFuncTable, &idx, AS_ONE0, (Il2CppMethodPointer) &ADD_AsOne0);
+    SetAbilityFunctionTable(getFuncTable, &idx, AS_ONE1, (Il2CppMethodPointer) &ADD_AsOne1);
 
     return getFuncTable;
 }
