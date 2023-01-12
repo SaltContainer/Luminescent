@@ -1,6 +1,7 @@
 #pragma once
 
 #include "il2cpp.hpp"
+#include "PokeAction.hpp"
 
 namespace Dpr
 {
@@ -11,7 +12,7 @@ namespace Dpr
             struct PokeActionContainer_c;
 
             struct PokeActionContainer_Fields {
-                struct Dpr_Battle_Logic_PokeAction_array* m_actions;
+                struct PokeAction_array* m_actions;
                 uint8_t m_count;
             };
 

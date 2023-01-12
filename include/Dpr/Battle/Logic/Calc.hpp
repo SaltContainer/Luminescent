@@ -13,6 +13,7 @@ namespace Dpr
             struct Calc
             {
                 static uint32_t GetRand(uint32_t range, MethodInfo * method);
+                static uint32_t RandRange(uint32_t min, uint32_t max, MethodInfo *method);
                 static bool IsOccurPer(uint32_t per, MethodInfo *method);
                 static BTL_SICKCONT_o MakeDefaultPokeSickCont(uint32_t sick, uint8_t causePokeID, bool isCantUseRand, MethodInfo *method);
                 static uint32_t QuotMaxHP(BTL_POKEPARAM_o *bpp, uint32_t denom, bool useBeforeGParam, MethodInfo *method);

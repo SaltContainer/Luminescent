@@ -588,16 +588,38 @@ namespace Dpr
                     System::Array<EventFactor_EventHandlerTable_o *> * HandlerTable_ScrewObire;
                 };
 
+                struct Pos_HandlerGetFunc_Fields {
+                    System_MulticastDelegate_Fields super;
+                };
+
+                struct Pos_HandlerGetFunc_o {
+                    void ctor(intptr_t m_target, MethodInfo * method);
+                    void ctor(Il2CppMethodPointer methodPointer);
+                    struct Pos_HandlerGetFunc_c *klass;
+                    void *monitor;
+                    struct Pos_HandlerGetFunc_Fields fields;
+                };
+
+                struct Pos_GET_FUNC_TABLE_ELEM_Fields {
+                    int32_t eff;
+                    struct Pos_HandlerGetFunc_o* func;
+                };
+
+                struct Pos_GET_FUNC_TABLE_ELEM_o {
+                    struct Pos_GET_FUNC_TABLE_ELEM_Fields fields;
+                };
 
                 extern Waza_c * Waza_TypeInfo;
-                extern void * Waza_HandlerGetFunc_TypeInfo;
                 // 4c5b330
-                extern void * Tokusei_HandlerGetFunc_TypeInfo;
 
+                extern void * Waza_HandlerGetFunc_TypeInfo;
                 extern MethodInfo * Method_ADD_Karagenki;
 
-                // 4c69db8
+                extern void * Tokusei_HandlerGetFunc_TypeInfo;
                 extern MethodInfo * Method_ADD_TetunoKobusi;
+
+                extern void * Pos_HandlerGetFunc_TypeInfo;
+                extern MethodInfo * Method_ADD_BatonTouch;
             }
         }
     }

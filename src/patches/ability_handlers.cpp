@@ -1,3 +1,4 @@
+#include "Dpr/Battle/Logic/BtlSpecialPri.hpp"
 #include "Dpr/Battle/Logic/BtlWeather.hpp"
 #include "Dpr/Battle/Logic/Calc.hpp"
 #include "Dpr/Battle/Logic/Common.hpp"
@@ -9,15 +10,9 @@
 #include "Dpr/Battle/Logic/Handler.hpp"
 #include "Dpr/Battle/Logic/Handler/Tokusei.hpp"
 #include "Dpr/Battle/Logic/PokeSet.hpp"
-#include "Dpr/Battle/Logic/RankEffectCause.hpp"
 #include "Dpr/Battle/Logic/Section.hpp"
-#include "Dpr/Battle/Logic/Section_AddSick.hpp"
 #include "Dpr/Battle/Logic/Section_CheckNotEffect_Guard.hpp"
 #include "Dpr/Battle/Logic/Section_FromEvent_Damage.hpp"
-#include "Dpr/Battle/Logic/Section_FromEvent_FormChange.hpp"
-#include "Dpr/Battle/Logic/Section_FromEvent_RankEffect.hpp"
-#include "Dpr/Battle/Logic/Section_FromEvent_RankReset.hpp"
-#include "Dpr/Battle/Logic/SickCause.hpp"
 #include "Dpr/Battle/Logic/WAZADATA.hpp"
 #include "Dpr/Battle/Logic/WazaParam.hpp"
 #include "Pml/Personal/ParamID.hpp"
@@ -44,6 +39,13 @@ using namespace Pml::WazaData;
 
 // Template MethodInfo
 extern MethodInfo * Method_handler_TetunoKobusi;
+
+// WorkIdx
+constexpr uint8_t A = 0;
+constexpr uint8_t B = 1;
+constexpr uint8_t C = 2;
+constexpr uint8_t D = 3;
+constexpr uint8_t PERSIST = 4;
 
 // AbilityIDs
 constexpr uint32_t FORECAST = 59;
@@ -173,63 +175,6 @@ static System::Array<EventFactor_EventHandlerTable_o *> * sHandlerTableAsOne0;
 static System::Array<EventFactor_EventHandlerTable_o *> * sHandlerTableAsOne1;
 
 // --- EventHandler delegates ---
-uint8_t HighestMultiple(uint8_t max, uint8_t factor) {
-    uint8_t factor2 = max / factor;
-    return factor * factor2;
-}
-void HandlerFormChange(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, uint8_t nextForm, bool persistOnSwitch,
-                       bool displayAbility, bool animationEnabled) {
-    system_load_typeinfo((void *)0x88fe);
-    BTL_POKEPARAM_o * bpp = Common::GetPokeParam(args,pokeID, nullptr);
-    if (bpp->fields.m_formNo == nextForm) return;
-    Section_FromEvent_FormChange_Description_o * desc = (Section_FromEvent_FormChange_Description_o *)
-            il2cpp_object_new(Section_FromEvent_FormChange_Description_TypeInfo);
-    desc->ctor(nullptr);
-    desc->fields.pokeID = pokeID;
-    desc->fields.formNo = nextForm;
-    desc->fields.isDontResetFormByOut = persistOnSwitch;
-    desc->fields.isDisplayTokuseiWindow = displayAbility;
-    desc->fields.isDisplayChangeEffect = animationEnabled;
-    //desc->fields.successMessage->Setup(BtlStrType::BTL_STRTYPE_SET, 304, nullptr);
-    //desc->fields.successMessage->AddArg(pokeID, nullptr);
-    Common::FormChange(args, &desc, nullptr);
-}
-void HandlerMessage(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, bool displayAbility) {
-    system_load_typeinfo((void *)0x58d8);
-    Section_FromEvent_Message::Description_o *desc = (Section_FromEvent_Message::Description_o *)
-            il2cpp_object_new(Section_FromEvent_Message::Description_TypeInfo);
-    desc->ctor(nullptr);
-    desc->fields.pokeID = pokeID;
-    desc->fields.isDisplayTokuseiWindow = displayAbility;
-    Common::Message(args, &desc, nullptr);
-}
-void HandlerRankEffect(EventFactor_EventHandlerArgs_o **args, uint8_t causePokeID, uint8_t targetPokeID,
-                       int32_t rankType, uint8_t rankVolume, bool displayAbility, bool ignoreSubstitute,
-                       bool messageOnFail) {
-    system_load_typeinfo((void *)0x89b2);
-    Section_FromEvent_RankEffect_Description_o *rankEffectDesc = (Section_FromEvent_RankEffect_Description_o *)
-            il2cpp_object_new(Section_FromEvent_RankEffect_Description_TypeInfo);
-    rankEffectDesc->ctor(nullptr);
-    rankEffectDesc->fields.pokeID = causePokeID;
-    rankEffectDesc->fields.targetPokeCount = 1;
-    rankEffectDesc->fields.targetPokeID->m_Items[0] = targetPokeID;
-    rankEffectDesc->fields.rankType = rankType;
-    rankEffectDesc->fields.rankVolume = rankVolume;
-    rankEffectDesc->fields.cause = RankEffectCause::OTHER;
-    rankEffectDesc->fields.isDisplayTokuseiWindow = displayAbility;
-    rankEffectDesc->fields.isMigawariThrew = ignoreSubstitute;
-    rankEffectDesc->fields.isSpFailMessageDisplay = messageOnFail;
-    Common::RankEffect(args,&rankEffectDesc,(MethodInfo *)0x0);
-}
-void HandlerRankReset(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID) {
-    system_load_typeinfo((void *)0xa911);
-    Section_FromEvent_RankReset_Description_o *desc = (Section_FromEvent_RankReset_Description_o *)
-            il2cpp_object_new(Section_FromEvent_RankReset_Description_TypeInfo);
-    desc->ctor(nullptr);
-    desc->fields.pokeCount = 1;
-    desc->fields.pokeID->m_Items[0] = pokeID;
-    Common::RankReset(args,&desc, nullptr);
-}
 uint8_t MultitypeType(uint32_t itemNo) {
     switch (itemNo) {
         case FIST_PLATE:
@@ -400,7 +345,7 @@ uint8_t HandlerForecastGetFormID0(EventFactor_EventHandlerArgs_o **args, uint8_t
     return HighestMultiple(Common::GetPokeParam(args, pokeID, nullptr)->fields.m_formNo, 4);
 }
 void HandlerForecastAtkprocEnd(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method) {
-    if (Common::GetWorkValue(args, 0, nullptr) == 0) return;
+    if (!Common::GetWorkValue(args, A, nullptr)) return;
     BTL_POKEPARAM_o * bpp = Common::GetPokeParam(args,pokeID, nullptr);
     //if (bpp->HENSIN_Check(nullptr)) return;
     uint8_t nextForm = HandlerForecastGetFormID(args, pokeID);
@@ -412,10 +357,10 @@ void HandlerForecastMemberInComp(EventFactor_EventHandlerArgs_o **args, uint8_t 
     BTL_POKEPARAM_o * bpp = Common::GetPokeParam(args,pokeID, nullptr);
     //if (bpp->HENSIN_Check(nullptr)) return;
     uint8_t nextForm = HandlerForecastGetFormID(args, pokeID);
+    Common::SetWorkValue(args, A, true, nullptr);
     if (nextForm >= PersonalSystem::GetPersonalData(bpp->GetMonsNo(nullptr), 0,
                                                     nullptr)->fields.form_max) return;
     HandlerFormChange(args, pokeID, nextForm, false, true, true);
-    Common::SetWorkValue(args, 0, 1, nullptr);
 }
 void HandlerForecastTokuseiDisable(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method) {
     if (Common::GetEventVar(args, EventVar::POKEID, nullptr) != pokeID) return;
@@ -424,7 +369,7 @@ void HandlerForecastTokuseiDisable(EventFactor_EventHandlerArgs_o **args, uint8_
                       false, true);
 }
 void HandlerForecastNotifyAirlock(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method) {
-    if (Common::GetWorkValue(args, 0, nullptr) == 0) return;
+    if (!Common::GetWorkValue(args, A, nullptr)) return;
     //if (bpp->HENSIN_Check(nullptr)) return;
     HandlerFormChange(args, pokeID, HandlerForecastGetFormID0(args, pokeID), false,
                       false, true);
@@ -451,7 +396,7 @@ uint8_t HandlerFlowerGiftGetFormID0(EventFactor_EventHandlerArgs_o **args, uint8
     return HighestMultiple(Common::GetPokeParam(args, pokeID, nullptr)->fields.m_formNo, 2);
 }
 void HandlerFlowerGiftAtkprocEnd(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method) {
-    if (Common::GetWorkValue(args, 0, nullptr) == 0) return;
+    if (!Common::GetWorkValue(args, A, nullptr)) return;
     BTL_POKEPARAM_o * bpp = Common::GetPokeParam(args,pokeID, nullptr);
     //if (bpp->HENSIN_Check(nullptr)) return;
     uint8_t nextForm = HandlerFlowerGiftGetFormID(args, pokeID);
@@ -463,26 +408,26 @@ void HandlerFlowerGiftMemberInComp(EventFactor_EventHandlerArgs_o **args, uint8_
     BTL_POKEPARAM_o * bpp = Common::GetPokeParam(args,pokeID, nullptr);
     //if (bpp->HENSIN_Check(nullptr)) return;
     uint8_t nextForm = HandlerFlowerGiftGetFormID(args, pokeID);
+    Common::SetWorkValue(args, A, true, nullptr);
     if (nextForm >= PersonalSystem::GetPersonalData(bpp->GetMonsNo(nullptr), 0,
                                                     nullptr)->fields.form_max) return;
     HandlerFormChange(args, pokeID, nextForm, false, true, true);
-    Common::SetWorkValue(args, 0, 1, nullptr);
 }
 void HandlerFlowerGiftTokuseiDisable(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method) {
-    if (Common::GetWorkValue(args, 0, nullptr) == 0) return;
+    if (!Common::GetWorkValue(args, A, nullptr)) return;
     if (Common::GetEventVar(args, EventVar::POKEID, nullptr) != pokeID) return;
     //if (bpp->HENSIN_Check(nullptr)) return;
     HandlerFormChange(args, pokeID, HandlerFlowerGiftGetFormID0(args, pokeID), false,
                       false, true);
 }
 void HandlerFlowerGiftNotifyAirlock(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method) {
-    if (Common::GetWorkValue(args, 0, nullptr) == 0) return;
+    if (!Common::GetWorkValue(args, A, nullptr)) return;
     //if (bpp->HENSIN_Check(nullptr)) return;
     HandlerFormChange(args, pokeID, HandlerFlowerGiftGetFormID0(args, pokeID), false,
                       false, true);
 }
 void HandlerFlowerGiftChangeTokuseiBefore(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method) {
-    if (Common::GetWorkValue(args, 0, nullptr) == 0) return;
+    if (!Common::GetWorkValue(args, A, nullptr)) return;
     //if (bpp->HENSIN_Check(nullptr)) return;
     if (Common::GetEventVar(args, EventVar::POKEID, nullptr) != pokeID) return;
     if (Common::GetEventVar(args, EventVar::TOKUSEI_NEXT, nullptr) ==
@@ -504,13 +449,13 @@ void HandlerZenModeMemberInComp(EventFactor_EventHandlerArgs_o **args, uint8_t p
     BTL_POKEPARAM_o * bpp = Common::GetPokeParam(args,pokeID, nullptr);
     //if (bpp->HENSIN_Check(nullptr)) return;
     uint8_t nextForm = HandlerZenModeGetFormID(bpp);
+    Common::SetWorkValue(args, A, true, nullptr);
     if (nextForm >= PersonalSystem::GetPersonalData(bpp->GetMonsNo(nullptr), 0,
                                                     nullptr)->fields.form_max) return;
     HandlerFormChange(args, pokeID, nextForm, false, true, true);
-    Common::SetWorkValue(args, 0, 1, nullptr);
 }
 void HandlerZenModeTurncheckDone(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method) {
-    if (Common::GetWorkValue(args, 0, nullptr) == 0) return;
+    if (!Common::GetWorkValue(args, A, nullptr)) return;
     BTL_POKEPARAM_o * bpp = Common::GetPokeParam(args,pokeID, nullptr);
     //if (bpp->HENSIN_Check(nullptr)) return;
     uint8_t nextForm = HandlerZenModeGetFormID(bpp);
@@ -550,26 +495,24 @@ void HandlerShieldsDownCheckInemuri(EventFactor_EventHandlerArgs_o **args, uint8
 void HandlerShieldsDownMemberInComp(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method) {
     BTL_POKEPARAM_o * bpp = Common::GetPokeParam(args,pokeID, nullptr);
     //if (bpp->HENSIN_Check(nullptr)) return;
-    if (bpp->fields.m_formNo > 13) return;
     uint8_t nextForm = HandlerShieldsDownGetFormID(bpp);
+    Common::SetWorkValue(args, B, true, nullptr);
     if (nextForm >= PersonalSystem::GetPersonalData(bpp->GetMonsNo(nullptr), 0,
                                                     nullptr)->fields.form_max) return;
     HandlerFormChange(args, pokeID, nextForm, false, true, true);
-    Common::SetWorkValue(args, 1, 1, nullptr);
 }
 void HandlerShieldsDownAddSickCheckFail(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method) {
     if (Common::GetEventVar(args, EventVar::POKEID_DEF, nullptr) != pokeID) return;
     if (!HandlerShieldsDownGetAddSickFail(Common::GetPokeParam(args,pokeID, nullptr))) return;
     int32_t sickID = Common::GetEventVar(args, EventVar::SICKID, nullptr);
-    if (sickID != 14 && sickID > 5) return;
-    Common::SetWorkValue(args, 0, Common::RewriteEventVar(args, EventVar::FAIL_FLAG, 1,
+    if (sickID != WazaSick::WAZASICK_AKUBI && sickID > 5) return;
+    Common::SetWorkValue(args, A, Common::RewriteEventVar(args, EventVar::FAIL_FLAG, true,
                                                           nullptr), nullptr);
 }
 void HandlerShieldsDownTurncheckDone(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method) {
-    if (Common::GetWorkValue(args, 1, nullptr) == 0) return;
+    if (!Common::GetWorkValue(args, B, nullptr)) return;
     BTL_POKEPARAM_o * bpp = Common::GetPokeParam(args,pokeID, nullptr);
     //if (bpp->HENSIN_Check(nullptr)) return;
-    if (bpp->fields.m_formNo > 13) return;
     uint8_t nextForm = HandlerShieldsDownGetFormID(bpp);
     if (nextForm >= PersonalSystem::GetPersonalData(bpp->GetMonsNo(nullptr), 0,
                                                     nullptr)->fields.form_max) return;
@@ -579,19 +522,20 @@ void HandlerShieldsDownTurncheckDone(EventFactor_EventHandlerArgs_o **args, uint
 uint8_t HandlerSchoolingGetFormID(BTL_POKEPARAM_o *bpp) {
     return HighestMultiple(bpp->fields.m_formNo, 2) +
            ((uint32_t)bpp->GetValue(BTL_POKEPARAM_ValueID::BPP_HP, nullptr) >
-            Calc::QuotMaxHP_Zero(bpp, 4, false, nullptr) && bpp->GetValue(17, nullptr) >= 20);
+            Calc::QuotMaxHP_Zero(bpp, 4, false, nullptr) &&
+            bpp->GetValue(BTL_POKEPARAM_ValueID::BPP_LEVEL, nullptr) >= 20);
 }
 void HandlerSchoolingMemberInComp(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method) {
     BTL_POKEPARAM_o * bpp = Common::GetPokeParam(args,pokeID, nullptr);
     //if (bpp->HENSIN_Check(nullptr)) return;
     uint8_t nextForm = HandlerSchoolingGetFormID(bpp);
+    Common::SetWorkValue(args, A, true, nullptr);
     if (nextForm >= PersonalSystem::GetPersonalData(bpp->GetMonsNo(nullptr), 0,
                                                     nullptr)->fields.form_max) return;
     HandlerFormChange(args, pokeID, nextForm, false, true, true);
-    Common::SetWorkValue(args, 0, 1, nullptr);
 }
 void HandlerSchoolingTurncheckDone(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method) {
-    if (Common::GetWorkValue(args, 0, nullptr) == 0) return;
+    if (!Common::GetWorkValue(args, A, nullptr)) return;
     BTL_POKEPARAM_o * bpp = Common::GetPokeParam(args,pokeID, nullptr);
     //if (bpp->HENSIN_Check(nullptr)) return;
     uint8_t nextForm = HandlerSchoolingGetFormID(bpp);
@@ -609,32 +553,24 @@ void HandlerDisguiseWazaDmgProc2(EventFactor_EventHandlerArgs_o **args, uint8_t 
     //if (bpp->HENSIN_Check(nullptr)) return;
     uint8_t formNo = Common::GetPokeParam(args,pokeID, nullptr)->fields.m_formNo;
     if (formNo != HandlerDisguiseGetFormID(formNo, 0)) return;
-    Common::RewriteEventVar(args, EventVar::ZERO_DAMAGE_FLAG, 1, nullptr);
-    Common::SetWorkValue(args, 0, 1, nullptr);
+    Common::RewriteEventVar(args, EventVar::ZERO_DAMAGE_FLAG, true, nullptr);
+    Common::SetWorkValue(args, A, true, nullptr);
 }
 void HandlerDisguiseWazaDmgReaction(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method) {
-    system_load_typeinfo((void *)0x8a36);
     if (Common::GetEventVar(args, EventVar::POKEID_DEF, nullptr) != pokeID) return;
     if (Common::GetEventVar(args, EventVar::MIGAWARI_FLAG, nullptr)) return;
     uint8_t formNo = Common::GetPokeParam(args,pokeID, nullptr)->fields.m_formNo;
     if (formNo != HandlerDisguiseGetFormID(formNo, 0)) return;
-    if (Common::GetWorkValue(args, 0, nullptr) == 0) return;
+    if (!Common::GetWorkValue(args, A, nullptr)) return;
     uint8_t nextForm = HandlerDisguiseGetFormID(formNo, 1);
     BTL_POKEPARAM_o * bpp = Common::GetPokeParam(args,pokeID, nullptr);
     if (nextForm < PersonalSystem::GetPersonalData(bpp->GetMonsNo(nullptr), 0,
                                                     nullptr)->fields.form_max)
         HandlerFormChange(args, pokeID, nextForm, true, false, true);
-    Common::SetWorkValue(args, 0, 0, nullptr);
-    Section_FromEvent_Damage_Description_o *desc = (Section_FromEvent_Damage_Description_o *)
-            il2cpp_object_new(Section_FromEvent_Damage_Description_TypeInfo);
-    desc->ctor(nullptr);
-    desc->fields.pokeID = pokeID;
-    desc->fields.targetPokeID = pokeID;
-    desc->fields.damage = (uint16_t)Calc::QuotMaxHP(bpp, 8, true, nullptr);
-    desc->fields.damageCause = DamageCause::OTHER;
-    desc->fields.damageCausePokeID = pokeID;
-    desc->fields.isDisplayTokuseiWindow = true;
-    Common::Damage(args,&desc, nullptr);
+    Common::SetWorkValue(args, A, false, nullptr);
+    HandlerDamage(args, pokeID, pokeID,
+                  Calc::QuotMaxHP(bpp, 8, true, nullptr),
+                  false, true);
 }
 // Battle Bond
 uint8_t HandlerBattleBondGetFormID(uint8_t formNo, uint8_t targetFormNo) {
@@ -656,12 +592,14 @@ void HandlerBattleBondWazaPower(EventFactor_EventHandlerArgs_o **args, uint8_t p
                                                                             nullptr) + 5, nullptr);
 }
 void HandlerBattleBondDamageprocEndHitReal(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method) {
+    if (Common::GetWorkValue(args, PERSIST, nullptr)) return;
     if (Common::CheckShowDown(args, nullptr)) return;
     if (Common::GetKillCount(args, pokeID, nullptr) == 0) return;
     uint8_t formNo = Common::GetPokeParam(args,pokeID, nullptr)->fields.m_formNo;
     if (formNo == HandlerBattleBondGetFormID(formNo, 2)) return;
     uint8_t nextForm = HandlerBattleBondGetFormID(formNo, 2);
     BTL_POKEPARAM_o * bpp = Common::GetPokeParam(args,pokeID, nullptr);
+    Common::SetWorkValue(args, PERSIST, true, nullptr);
     if (nextForm >= PersonalSystem::GetPersonalData(bpp->GetMonsNo(nullptr), 0,
                                                     nullptr)->fields.form_max) return;
     HandlerFormChange(args, pokeID, nextForm, true, true, true);
@@ -709,10 +647,6 @@ void HandlerGulpMissileWazaseqEnd(EventFactor_EventHandlerArgs_o **args, uint8_t
     HandlerFormChange(args, pokeID, nextForm, false, true, wazaID != DIVE);
 }
 void HandlerGulpMissileWazaDmgReaction(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method) {
-    system_load_typeinfo((void *)0x8a36);
-    system_load_typeinfo((void *)0x89a6);
-    system_load_typeinfo((void *)0x8919);
-    system_load_typeinfo((void *)0x8a39);
     if (Common::GetEventVar(args, EventVar::POKEID_DEF, nullptr) != pokeID) return;
     if (Common::GetEventVar(args, EventVar::MIGAWARI_FLAG, nullptr)) return;
     BTL_POKEPARAM_o * bpp = Common::GetPokeParam(args, pokeID, nullptr);
@@ -721,37 +655,18 @@ void HandlerGulpMissileWazaDmgReaction(EventFactor_EventHandlerArgs_o **args, ui
     int32_t pokeIDAtk = Common::GetEventVar(args, EventVar::POKEID_ATK, nullptr);
     BTL_POKEPARAM_o * bppAtk = Common::GetPokeParam(args, pokeIDAtk, nullptr);
     if (!bppAtk->IsDead(nullptr)) {
-        Section_FromEvent_Damage_Description_o *damageDesc = (Section_FromEvent_Damage_Description_o *)
-                il2cpp_object_new(Section_FromEvent_Damage_Description_TypeInfo);
-        damageDesc->ctor(nullptr);
-        damageDesc->fields.pokeID = pokeID;
-        damageDesc->fields.targetPokeID = pokeIDAtk;
-        damageDesc->fields.damage = (uint16_t)Calc::QuotMaxHP(bppAtk, 4, true, nullptr);
-        damageDesc->fields.damageCause = DamageCause::OTHER;
-        damageDesc->fields.damageCausePokeID = pokeID;
-        damageDesc->fields.disableDeadProcess = true;
-        damageDesc->fields.isDisplayTokuseiWindow = true;
-        Common::Damage(args,&damageDesc, nullptr);
-        if (formNo == HandlerGulpMissileGetFormID(formNo, 1)) {
+        HandlerDamage(args, pokeID, pokeIDAtk,
+                      Calc::QuotMaxHP(bppAtk, 4, true, nullptr),
+                      true, true);
+        if (formNo == HandlerGulpMissileGetFormID(formNo, 1))
             HandlerRankEffect(args, pokeID, pokeIDAtk, WazaRankEffect::DEFENCE,
                               -1, false, false, true);
-        }
-        else {
-            Section_AddSick_Description_o *addSickDesc = (Section_AddSick_Description_o *)
-                    il2cpp_object_new(Section_AddSick_Description_TypeInfo);
-            addSickDesc->ctor(nullptr);
-            addSickDesc->fields.pokeID = pokeID;
-            addSickDesc->fields.isDisplayTokuseiWindow = false;
-            addSickDesc->fields.sickID = WazaSick::WAZASICK_MAHI;
-            addSickDesc->fields.sickCont.fields.raw = Calc::MakeDefaultPokeSickCont(Sick::MAHI,
-                                                                                    pokeID,
-                                                                                    false,
-                                                                                    nullptr).fields.raw;
-            addSickDesc->fields.sickCause = SickCause::OTHER;
-            addSickDesc->fields.isFailResultDisplay = false;
-            addSickDesc->fields.targetPokeID = (uint8_t)pokeIDAtk;
-            Common::AddSick(args, &addSickDesc, nullptr);
-        }
+        else
+            HandlerAddSick(args, pokeID, pokeIDAtk, WazaSick::WAZASICK_MAHI,
+                           Calc::MakeDefaultPokeSickCont(Sick::MAHI,
+                                                         pokeID,
+                                                         false,
+                                                         nullptr).fields.raw);
     }
     HandlerFormChange(args, pokeID, HandlerGulpMissileGetFormID(formNo, 0), false,
                       false, true);
@@ -767,13 +682,13 @@ void HandlerIceFaceWazaDmgProc2(EventFactor_EventHandlerArgs_o **args, uint8_t p
     //if (bpp->HENSIN_Check(nullptr)) return;
     uint8_t formNo = Common::GetPokeParam(args,pokeID, nullptr)->fields.m_formNo;
     if (formNo != HandlerIceFaceGetFormID(formNo, 0)) return;
-    Common::RewriteEventVar(args, EventVar::ZERO_DAMAGE_FLAG, 1, nullptr);
-    Common::SetWorkValue(args, 0, 1, nullptr);
+    Common::RewriteEventVar(args, EventVar::ZERO_DAMAGE_FLAG, true, nullptr);
+    Common::SetWorkValue(args, A, true, nullptr);
 }
 void HandlerIceFaceWazaDmgReaction(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method) {
     if (Common::GetEventVar(args, EventVar::POKEID_DEF, nullptr) != pokeID) return;
-    if (Common::GetWorkValue(args, 0, nullptr) == 0) return;
-    Common::SetWorkValue(args, 0, 0, nullptr);
+    if (!Common::GetWorkValue(args, A, nullptr)) return;
+    Common::SetWorkValue(args, A, false, nullptr);
     if (Common::GetEventVar(args, EventVar::MIGAWARI_FLAG, nullptr)) return;
     BTL_POKEPARAM_o * bpp = Common::GetPokeParam(args,pokeID, nullptr);
     uint8_t formNo = bpp->fields.m_formNo;
@@ -818,36 +733,35 @@ void HandlerHungerSwitchTurncheckDone(EventFactor_EventHandlerArgs_o **args, uin
 }
 // Quick Draw
 void HandlerQuickDrawCheckSpPriority(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method) {
-    if (Common::GetEventVar(args, EventVar::SP_PRIORITY, nullptr) != 1) return;
+    if (Common::GetEventVar(args, EventVar::SP_PRIORITY, nullptr) != BtlSpecialPri::BTL_SPPRI_DEFAULT) return;
     if (Common::GetEventVar(args, EventVar::POKEID, nullptr) != pokeID) return;
     PokeAction_o *pokeAction = Common::SearchByPokeID(args, pokeID, true, true, nullptr);
     if (pokeAction == nullptr) return;
     if (!WAZADATA::IsDamage(PokeAction::GetWazaID(pokeAction, nullptr),nullptr)) return;
     if ((*args)->fields.pPokeActionContainer->IsAllActDoneByPokeID(pokeID, nullptr)) return;
-    if (Common::GetWorkValue(args, 0, nullptr) == 0) {
-        Common::SetWorkValue(args, 0, 1, nullptr);
-        Common::SetWorkValue(args, 1, Calc::IsOccurPer(30, nullptr), nullptr);
+    if (!Common::GetWorkValue(args, A, nullptr)) {
+        Common::SetWorkValue(args, A, true, nullptr);
+        Common::SetWorkValue(args, B, Calc::IsOccurPer(30, nullptr), nullptr);
     }
-    if (Common::GetWorkValue(args, 1, nullptr) == 0) return;
-    bool success = Common::RewriteEventVar(args, EventVar::SP_PRIORITY, 2, nullptr);
-    if (!success) return;
-    if (Common::GetWorkValue(args, 2, nullptr) != 0) return;
-    Common::SetWorkValue(args, 2, 1, nullptr);
+    if (!Common::GetWorkValue(args, B, nullptr)) return;
+    if (!Common::RewriteEventVar(args, EventVar::SP_PRIORITY, BtlSpecialPri::BTL_SPPRI_HIGH, nullptr)) return;
+    if (Common::GetWorkValue(args, C, nullptr)) return;
+    Common::SetWorkValue(args, C, true, nullptr);
     HandlerMessage(args, pokeID, true);
 }
 void HandlerQuickDrawTurncheckDone(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method) {
     if (Common::GetEventVar(args, EventVar::POKEID, nullptr) != pokeID) return;
-    Common::SetWorkValue(args, 0, 0, nullptr);
-    Common::SetWorkValue(args, 1, 0, nullptr);
-    Common::SetWorkValue(args, 2, 0, nullptr);
+    Common::SetWorkValue(args, A, false, nullptr);
+    Common::SetWorkValue(args, B, false, nullptr);
+    Common::SetWorkValue(args, C, false, nullptr);
 }
 // Curious Medicine
 void HandlerCuriousMedicineMemberInEvo(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method) {
     uint8_t targetPokeID = Common::GetEventVar(args, EventVar::POKEID, nullptr);
     if (targetPokeID == pokeID) return;
     if (!Common::IsFriendPokeID(args, pokeID, targetPokeID, nullptr)) return;
-    if (Common::GetWorkValue(args, 0, nullptr) == 0) {
-        Common::SetWorkValue(args, 0, 1, nullptr);
+    if (!Common::GetWorkValue(args, A, nullptr)) {
+        Common::SetWorkValue(args, A, true, nullptr);
         HandlerMessage(args, pokeID, true);
     }
     HandlerRankReset(args, targetPokeID);

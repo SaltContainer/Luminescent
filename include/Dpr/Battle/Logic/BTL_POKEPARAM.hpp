@@ -59,9 +59,17 @@ namespace Dpr
 
             struct BTL_POKEPARAM_o
             {
+                BTL_POKEPARAM_c *klass;
+                void *monitor;
+                BTL_POKEPARAM_Fields fields;
+
+                bool CheckNemuri(int32_t checkMode, MethodInfo *method);
+                bool CheckSick(int32_t sickType,MethodInfo *method);
                 bool CONFRONT_REC_IsMatch(uint8_t pokeID, MethodInfo *method);
-                uint16_t GetItem(MethodInfo *method);
+                uint8_t COUNTER_Get(int32_t cnt, MethodInfo *method);
                 uint8_t GetFriendship(MethodInfo *method);
+                uint8_t GetID(MethodInfo *method);
+                uint16_t GetItem(MethodInfo *method);
                 uint16_t GetMonsNo(MethodInfo *method);
                 uint32_t GetPokeSick(MethodInfo *method);
                 Pml::PokePara::CoreParam * GetSrcDataConst(MethodInfo *method);
@@ -70,75 +78,100 @@ namespace Dpr
                 bool IsDead(MethodInfo *method);
                 bool IsMatchTokusei(int32_t tokusei, MethodInfo *method);
                 bool TURNFLAG_Get(int32_t flagID, MethodInfo *method);
-
-
-                BTL_POKEPARAM_c *klass;
-                void *monitor;
-                BTL_POKEPARAM_Fields fields;
+                void TURNFLAG_Set(int32_t flagID, MethodInfo *method);
             };
 
-            enum BTL_POKEPARAM_ValueID {
-                BPP_VALUE_NULL,
-                BPP_ATTACK_RANK,
-                BPP_DEFENCE_RANK,
-                BPP_SP_ATTACK_RANK,
-                BPP_SP_DEFENCE_RANK,
-                BPP_AGILITY_RANK,
-                BPP_HIT_RATIO,
-                BPP_AVOID_RATIO,
-                BPP_ATTACK,
-                BPP_DEFENCE,
-                BPP_SP_ATTACK,
-                BPP_SP_DEFENCE,
-                BPP_AGILITY,
-                BPP_HP,
-                BPP_HP_BEFORE_G,
-                BPP_MAX_HP,
-                BPP_MAX_HP_BEFORE_G,
-                BPP_LEVEL,
-                BPP_TOKUSEI,
-                BPP_TOKUSEI_EFFECTIVE,
-                BPP_SEX,
-                BPP_SEIKAKU,
-                BPP_PERSONAL_RAND,
-                BPP_EXP,
-                BPP_MONS_POW,
-                BPP_MONS_AGILITY,
-                BPP_RANKVALUE_START = 1,
-                BPP_RANKVALUE_END = 7,
-                BPP_RANKVALUE_RANGE = 7
-            };
+            namespace BTL_POKEPARAM_ValueID
+            {
+                enum BTL_POKEPARAM_ValueID {
+                    BPP_VALUE_NULL,
+                    BPP_ATTACK_RANK,
+                    BPP_DEFENCE_RANK,
+                    BPP_SP_ATTACK_RANK,
+                    BPP_SP_DEFENCE_RANK,
+                    BPP_AGILITY_RANK,
+                    BPP_HIT_RATIO,
+                    BPP_AVOID_RATIO,
+                    BPP_ATTACK,
+                    BPP_DEFENCE,
+                    BPP_SP_ATTACK,
+                    BPP_SP_DEFENCE,
+                    BPP_AGILITY,
+                    BPP_HP,
+                    BPP_HP_BEFORE_G,
+                    BPP_MAX_HP,
+                    BPP_MAX_HP_BEFORE_G,
+                    BPP_LEVEL,
+                    BPP_TOKUSEI,
+                    BPP_TOKUSEI_EFFECTIVE,
+                    BPP_SEX,
+                    BPP_SEIKAKU,
+                    BPP_PERSONAL_RAND,
+                    BPP_EXP,
+                    BPP_MONS_POW,
+                    BPP_MONS_AGILITY,
+                    BPP_RANKVALUE_START = 1,
+                    BPP_RANKVALUE_END = 7,
+                    BPP_RANKVALUE_RANGE = 7
+                };
+            }
 
-            enum BTL_POKEPARAM_TurnFlag {
-                TURNFLG_ACTION_START,
-                TURNFLG_ACTION_DONE,
-                TURNFLG_DAMAGED,
-                TURNFLG_WAZAPROC_DONE,
-                TURNFLG_SHRINK,
-                TURNFLG_KIAI_READY,
-                TURNFLG_KIAI_SHRINK,
-                TURNFLG_MAMORU,
-                TURNFLG_ITEM_CONSUMED,
-                TURNFLG_ITEM_CANT_USE,
-                TURNFLG_COMBIWAZA_READY,
-                TURNFLG_TAMEHIDE_OFF,
-                TURNFLG_MOVED,
-                TURNFLG_TURNCHECK_SICK_PASSED,
-                TURNFLG_HITRATIO_UP,
-                TURNFLG_NAGETUKERU_USING,
-                TURNFLG_MAMORU_ONLY_DAMAGE_WAZA,
-                TURNFLG_RESERVE_ITEM_SPEND,
-                TURNFLG_APPEARED_BY_POKECHANGE,
-                TURNFLG_CANT_ACTION,
-                TURNFLG_TRAPPSHELL_READY,
-                TURNFLG_GWALL_BROKEN,
-                TURNFLG_RAIDBOSS_REINFORCE_DONE,
-                TURNFLG_RAIDBOSS_ANGRY,
-                TURNFLG_RAIDBOSS_ANGRY_WAZA_ADD_DONE,
-                TURNFLG_RANK_UP,
-                TURNFLG_RANK_DOWN,
-                TURNFLG_MAX
-            };
+            namespace BTL_POKEPARAM_TurnFlag
+            {
+                enum BTL_POKEPARAM_TurnFlag {
+                    TURNFLG_ACTION_START,
+                    TURNFLG_ACTION_DONE,
+                    TURNFLG_DAMAGED,
+                    TURNFLG_WAZAPROC_DONE,
+                    TURNFLG_SHRINK,
+                    TURNFLG_KIAI_READY,
+                    TURNFLG_KIAI_SHRINK,
+                    TURNFLG_MAMORU,
+                    TURNFLG_ITEM_CONSUMED,
+                    TURNFLG_ITEM_CANT_USE,
+                    TURNFLG_COMBIWAZA_READY,
+                    TURNFLG_TAMEHIDE_OFF,
+                    TURNFLG_MOVED,
+                    TURNFLG_TURNCHECK_SICK_PASSED,
+                    TURNFLG_HITRATIO_UP,
+                    TURNFLG_NAGETUKERU_USING,
+                    TURNFLG_MAMORU_ONLY_DAMAGE_WAZA,
+                    TURNFLG_RESERVE_ITEM_SPEND,
+                    TURNFLG_APPEARED_BY_POKECHANGE,
+                    TURNFLG_CANT_ACTION,
+                    TURNFLG_TRAPPSHELL_READY,
+                    TURNFLG_GWALL_BROKEN,
+                    TURNFLG_RAIDBOSS_REINFORCE_DONE,
+                    TURNFLG_RAIDBOSS_ANGRY,
+                    TURNFLG_RAIDBOSS_ANGRY_WAZA_ADD_DONE,
+                    TURNFLG_RANK_UP,
+                    TURNFLG_RANK_DOWN,
+                    TURNFLG_MAX
+                };
+            }
+
+            namespace BTL_POKEPARAM_NemuriCheckMode
+            {
+                enum BTL_POKEPARAM_NemuriCheckMode
+                {
+                    NEMURI_CHECK_ONLY_SICK,
+                    NEMURI_CHECK_INCLUDE_ZETTAINEMURI
+                };
+            }
+
+            namespace BTL_POKEPARAM_Counter
+            {
+                enum BTL_POKEPARAM_Counter
+                {
+                    COUNTER_TAKUWAERU,
+                    COUNTER_TAKUWAERU_DEF,
+                    COUNTER_TAKUWAERU_SPDEF,
+                    COUNTER_MAMORU,
+                    COUNTER_FREEFALL,
+                    COUNTER_TURN_FROM_GWALL_BROKEN,
+                    COUNTER_MAX
+                };
+            }
         }
     }
 }

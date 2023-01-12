@@ -1,3 +1,32 @@
 [target=main, version=bd_130]
+// Handler.Waza$$.cctor
 18298a8:
     bl Waza_system_array_new
+
+// Handler.Pos$$.cctor
+1937290:
+    bl Pos_system_array_new
+
+// PosEffectManager$$.ctor
+20d0ec0:
+    mov w1, #0xf
+
+// PosEffectManager$$GetPosEffectStatus
+20d190c:
+    cmp w2, #0xf
+
+// PosEffectManager$$GetPosEffectStatusConst
+20d198c:
+    cmp w2, #0xf
+
+// PosEffectManager$$CreateEffectStatusArray
+20d0f00:
+    b Dpr_Battle_Logic_PosEffectManager_CreateEffectStatusArray
+
+// Section_WazaExec_DelayWazaReady$$Execute
+1f18424:
+    nop
+
+// Section_ProcessActionCore$$Execute
+21c0460:
+    b Dpr_Battle_Logic_Section_ProcessActionCore_Execute

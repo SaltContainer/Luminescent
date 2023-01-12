@@ -32,6 +32,10 @@
 204aaf0:
     b Pml_PokePara_CoreParam_GetType2
 
+// Fix Illusion break animation
+1f2e070:
+    mov w1, #0xa7
+
 // Implement Unseen Fist
 // Section_CheckNotEffect_Guard$$check_Mamoru
 21b1700:
