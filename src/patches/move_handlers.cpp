@@ -11,6 +11,7 @@
 #include "Dpr/Battle/Logic/InterruptCode.hpp"
 #include "Dpr/Battle/Logic/PokeID.hpp"
 #include "Dpr/Battle/Logic/PokeActionCategory.hpp"
+#include "Dpr/Battle/Logic/Section_InterruptAction.hpp"
 #include "Dpr/Battle/Logic/Section_ProcessActionCore.hpp"
 #include "Dpr/Battle/Logic/SICKCONT.hpp"
 #include "Dpr/Battle/Logic/WAZADATA.hpp"
