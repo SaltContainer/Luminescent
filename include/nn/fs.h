@@ -1,6 +1,8 @@
 #pragma once
 
 #include "result.h"
+#include "System/String.hpp"
+#include "il2cpp.hpp"
 
 namespace nn { namespace fs {
 
@@ -59,6 +61,28 @@ struct WriteOption
 
     WriteOption(u32 flags = 0) : flags(flags) { }
     u32 flags;
+};
+
+class File
+{
+public:
+    // 027cdd90
+    static Result Create(System::String *path, int64_t size, MethodInfo *method);
+    // 027cde70
+    static Result Open(FileHandle *outValue, System::String *path, int32_t mode, MethodInfo *method);
+    // 027cdce0
+    static Result Write(FileHandle handle, int64_t offset, System_Byte_array *buffer, int64_t size, int32_t option, MethodInfo *method);
+    // 027cdd80
+    static void Close(FileHandle param_1);
+    // 027cddd0
+    static Result Delete(System::String *path, MethodInfo *method);
+};
+
+class FileSystem
+{
+public:
+    // 027ce030
+    static Result Commit(System::String *name, MethodInfo *method);
 };
 
 

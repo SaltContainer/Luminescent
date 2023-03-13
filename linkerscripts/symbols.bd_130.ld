@@ -32,6 +32,7 @@ _ZN3Dpr2Nx10SaveSystem4SaveEP17System_Byte_arraybbP10MethodInfo = 0x0239bd40 - 0
 _ZN3Dpr2Nx10SaveSystem13GetLoadedDataEP10MethodInfo = 0x01ddf370 - 0x05708000;
 _ZN3Dpr2Nx10SaveSystem4LoadEbP10MethodInfo = 0x01ddf910 - 0x05708000;
 _ZN3Dpr2Nx10SaveSystem14SaveDataExistsEP10MethodInfo = 0x01ddfcf0 - 0x05708000;
+_ZN3Dpr2Nx10SaveSystem13MountSaveDataEP10MethodInfo = 0x01ddf5a0 - 0x05708000;
 _ZN8EvData_o9GetStringEiP10MethodInfo = 0x0230d690 - 0x056E6000;
 _ZN3Dpr8EvScript13EvDataManager9CallLabelEP15System_String_oP10MethodInfo = 0x01b0aa40 - 0x056E6000;
 PTR_QWORD_04bd27b0 = 0x04bd27b0 - 0x056E6000;
@@ -334,6 +335,16 @@ StringLiteral_9195 = 0x4ca7d90 - 0x05708000;
 StringLiteral_9196 = 0x4ca7d98 - 0x05708000;
 StringLiteral_9197 = 0x4ca7da0 - 0x05708000;
 StringLiteral_9198 = 0x4ca7da8 - 0x05708000;
+
+_ZN2nn2fs4File6CreateEPN6System6StringElP10MethodInfo = 0x27cdd90 - 0x05708000;
+_ZN2nn2fs4File4OpenEPNS0_10FileHandleEPN6System6StringEiP10MethodInfo = 0x27cde70 - 0x05708000;
+_ZN2nn2fs4File5WriteENS0_10FileHandleElP17System_Byte_arrayliP10MethodInfo = 0x27cdce0 - 0x05708000;
+_ZN2nn2fs4File5CloseENS0_10FileHandleE = 0x27cdd80 - 0x05708000;
+_ZN2nn2fs4File6DeleteEPN6System6StringEP10MethodInfo = 0x27cddd0 - 0x05708000;
+_ZN2nn2fs10FileSystem6CommitEPN6System6StringEP10MethodInfo = 0x27ce030 - 0x05708000;
+StringLiteral_10006 = 0x4ca96e8 - 0x05708000;
+StringLiteral_10007 = 0x4ca96f0 - 0x05708000;
+StringLiteral_10008 = 0x4ca96f8 - 0x05708000;
 
 _Z14FUN_7100252044v = 0x252044 - 0x05708000;
 _Z14FUN_710025de78j = 0x25de78 - 0x05708000;
