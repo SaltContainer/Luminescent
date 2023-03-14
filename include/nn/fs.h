@@ -10,7 +10,7 @@ const s32 PathLengthMax = 0x300;
 
 struct FileHandle
 {
-    u32 handle;
+    u64 handle;
 };
 
 struct DirectoryHandle
@@ -67,7 +67,7 @@ Result OpenFile(FileHandle* out, const char* path, s32 mode);
 void CloseFile(FileHandle handle);
 Result ReadFile(FileHandle handle, s64 offset, void* buffer, u32 size);
 Result ReadFile(FileHandle handle, s64 offset, void* buffer, u32 size, const ReadOption& options);
-Result WriteFile(FileHandle handle, s64 offset, const void* buffer, u32 size, const WriteOption& options = WriteOption(0));
+Result WriteFile(FileHandle handle, s64 position, void const* buffer, u64 size, WriteOption const& option);
 Result FlushFile(FileHandle handle);
 Result GetFileSize(s64* out, FileHandle handle);
 Result SetFileSize(FileHandle handle, s64 size);
@@ -88,7 +88,5 @@ Result RenameDirectory(const char* path, const char* newPath);
 
 Result MountSdCard(const char* mountPoint);
 void Unmount(const char* mountPoint);
-
-Result CommitFileSystem(const char* name);
 
 } }
