@@ -336,10 +336,6 @@ StringLiteral_9196 = 0x4ca7d98 - 0x05708000;
 StringLiteral_9197 = 0x4ca7da0 - 0x05708000;
 StringLiteral_9198 = 0x4ca7da8 - 0x05708000;
 
-StringLiteral_10006 = 0x4ca96e8 - 0x05708000;
-StringLiteral_10007 = 0x4ca96f0 - 0x05708000;
-StringLiteral_10008 = 0x4ca96f8 - 0x05708000;
-
 _Z14FUN_7100252044v = 0x252044 - 0x05708000;
 _Z14FUN_710025de78j = 0x25de78 - 0x05708000;
 _Z14FUN_71002543b0lj = 0x2543b0 - 0x05708000;
