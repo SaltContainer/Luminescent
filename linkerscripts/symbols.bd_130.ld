@@ -336,12 +336,6 @@ StringLiteral_9196 = 0x4ca7d98 - 0x05708000;
 StringLiteral_9197 = 0x4ca7da0 - 0x05708000;
 StringLiteral_9198 = 0x4ca7da8 - 0x05708000;
 
-_ZN2nn2fs4File6CreateEPN6System6StringElP10MethodInfo = 0x27cdd90 - 0x05708000;
-_ZN2nn2fs4File4OpenEPNS0_10FileHandleEPN6System6StringEiP10MethodInfo = 0x27cde70 - 0x05708000;
-_ZN2nn2fs4File5WriteENS0_10FileHandleElP17System_Byte_arrayliP10MethodInfo = 0x27cdce0 - 0x05708000;
-_ZN2nn2fs4File5CloseENS0_10FileHandleE = 0x27cdd80 - 0x05708000;
-_ZN2nn2fs4File6DeleteEPN6System6StringEP10MethodInfo = 0x27cddd0 - 0x05708000;
-_ZN2nn2fs10FileSystem6CommitEPN6System6StringEP10MethodInfo = 0x27ce030 - 0x05708000;
 StringLiteral_10006 = 0x4ca96e8 - 0x05708000;
 StringLiteral_10007 = 0x4ca96f0 - 0x05708000;
 StringLiteral_10008 = 0x4ca96f8 - 0x05708000;

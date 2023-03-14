@@ -63,29 +63,6 @@ struct WriteOption
     u32 flags;
 };
 
-class File
-{
-public:
-    // 027cdd90
-    static Result Create(System::String *path, int64_t size, MethodInfo *method);
-    // 027cde70
-    static Result Open(FileHandle *outValue, System::String *path, int32_t mode, MethodInfo *method);
-    // 027cdce0
-    static Result Write(FileHandle handle, int64_t offset, System_Byte_array *buffer, int64_t size, int32_t option, MethodInfo *method);
-    // 027cdd80
-    static void Close(FileHandle param_1);
-    // 027cddd0
-    static Result Delete(System::String *path, MethodInfo *method);
-};
-
-class FileSystem
-{
-public:
-    // 027ce030
-    static Result Commit(System::String *name, MethodInfo *method);
-};
-
-
 Result OpenFile(FileHandle* out, const char* path, s32 mode);
 void CloseFile(FileHandle handle);
 Result ReadFile(FileHandle handle, s64 offset, void* buffer, u32 size);
@@ -111,5 +88,7 @@ Result RenameDirectory(const char* path, const char* newPath);
 
 Result MountSdCard(const char* mountPoint);
 void Unmount(const char* mountPoint);
+
+Result CommitFileSystem(const char* name);
 
 } }

@@ -28,4 +28,4 @@
 
 // Double up the save file (Replace Dpr.NX.SaveSystem$$Save)
 01ddf3e0:
-    bl Dpr_NX_SaveSystem_Save
+    b Dpr_NX_SaveSystem_Save

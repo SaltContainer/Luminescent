@@ -67,27 +67,33 @@ bool Dpr_NX_SaveSystem_Save(System_Byte_array *data, bool writeMain, bool writeB
 
   if (writeMain) {
     socket_log("Deleting SaveData...\n");
-    nn::fs::File::Delete(StringLiteral_10006, (MethodInfo *) nullptr);
+    nn::fs::DeleteFile("SaveData:/SaveData.bin");
     socket_log("Creating SaveData...\n");
-    result[0] = nn::fs::File::Create(StringLiteral_10006, (int64_t)&data->max_length, (MethodInfo *) nullptr);
+    result[0] = nn::fs::CreateFile("SaveData:/SaveData.bin",(s64)*(&data->max_length));
     if (result[0].isSuccess()) {
       socket_log("Writing SaveData...\n");
-      nn::fs::File::Open(&fileHandle,StringLiteral_10006,2, (MethodInfo *) nullptr);
-      nn::fs::File::Write(fileHandle,0,data,(int64_t)&data->max_length,1, (MethodInfo *) nullptr);
-      nn::fs::File::Close(fileHandle);
+      socket_log("  Opening SaveData...\n");
+      nn::fs::OpenFile(&fileHandle,"SaveData:/SaveData.bin",2);
+      socket_log("  Writing SaveData...\n");
+      nn::fs::WriteFile(fileHandle,0,data,(s64)*(&data->max_length),nn::fs::WriteOption(1));
+      socket_log("  Closing SaveData...\n");
+      nn::fs::CloseFile(fileHandle);
       if (writeBackup) {
         socket_log("Deleting Backup...\n");
-        nn::fs::File::Delete(StringLiteral_10007, (MethodInfo *) nullptr);
+        nn::fs::DeleteFile("SaveData:/Backup.bin");
         socket_log("Creating Backup...\n");
-        result[0] = nn::fs::File::Create(StringLiteral_10007,(int64_t)&data->max_length, (MethodInfo *) nullptr);
+        result[0] = nn::fs::CreateFile("SaveData:/Backup.bin",(s64)*(&data->max_length));
         if (!result[0].isSuccess()) return false;
         socket_log("Writing Backup...\n");
-        nn::fs::File::Open(&fileHandle,StringLiteral_10007,2, (MethodInfo *) nullptr);
-        nn::fs::File::Write(fileHandle,0,data,(int64_t)&data->max_length,1, (MethodInfo *) nullptr);
-        nn::fs::File::Close(fileHandle);
+        socket_log("  Opening Backup...\n");
+        nn::fs::OpenFile(&fileHandle,"SaveData:/Backup.bin",2);
+        socket_log("  Writing Backup...\n");
+        nn::fs::WriteFile(fileHandle,0,data,(s64)*(&data->max_length),nn::fs::WriteOption(1));
+        socket_log("  Closing Backup...\n");
+        nn::fs::CloseFile(fileHandle);
       }
       socket_log("Commiting changes...\n");
-      result[0] = nn::fs::FileSystem::Commit(StringLiteral_10008, (MethodInfo *) nullptr);
+      result[0] = nn::fs::CommitFileSystem("SaveData");
       success = result[0].isSuccess();
     }
   }
@@ -95,17 +101,17 @@ bool Dpr_NX_SaveSystem_Save(System_Byte_array *data, bool writeMain, bool writeB
   {
     if (writeBackup) {
       socket_log("Deleting Backup...\n");
-      nn::fs::File::Delete(StringLiteral_10007, (MethodInfo *) nullptr);
+      nn::fs::DeleteFile("SaveData:/Backup.bin");
       socket_log("Creating Backup...\n");
-      result[0] = nn::fs::File::Create(StringLiteral_10007, (int64_t)&data->max_length, (MethodInfo *) nullptr);
+      result[0] = nn::fs::CreateFile("SaveData:/Backup.bin", (s64)*(&data->max_length));
       if (!result[0].isSuccess()) return false;
       socket_log("Writing Backup...\n");
-      nn::fs::File::Open(&fileHandle,StringLiteral_10007,2, (MethodInfo *) nullptr);
-      nn::fs::File::Write(fileHandle,0,data,(int64_t)&data->max_length,1, (MethodInfo *) nullptr);
-      nn::fs::File::Close(fileHandle);
+      nn::fs::OpenFile(&fileHandle,"SaveData:/Backup.bin",2);
+      nn::fs::WriteFile(fileHandle,0,data,(s64)*(&data->max_length),1);
+      nn::fs::CloseFile(fileHandle);
     }
     socket_log("Commiting changes...\n");
-    result[0] = nn::fs::FileSystem::Commit(StringLiteral_10008, (MethodInfo *) nullptr);
+    result[0] = nn::fs::CommitFileSystem("SaveData");
     success = result[0].isSuccess();
   }
 
