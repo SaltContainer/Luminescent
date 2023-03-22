@@ -1,0 +1,62 @@
+[target=main, version=bd_130]
+// Add'em handlers
+// Tokusei$$cctor
+1964f24:
+    bl Tokusei_system_array_new
+
+// Change Forecast
+// Tokusei$$handler_Tenkiya_Weather
+19514c0:
+    b HandlerForecastAtkprocEnd
+// Tokusei$$handler_Tenkiya_MemberInComp
+19511c0:
+    b HandlerForecastMemberInComp
+// Tokusei$$handler_Tenkiya_TokOff
+1951870:
+    b HandlerForecastTokuseiDisable
+// Tokusei$$handler_Tenkiya_AirLock
+1951580:
+    b HandlerForecastNotifyAirlock
+// Tokusei$$handler_Tenkiya_ChangeTok
+1951770:
+    b HandlerForecastChangeTokuseiBefore
+// Tokusei$$handler_Tenkiya_GetTok
+1951400:
+    b HandlerForecastChangeTokuseiAfter
+
+// Change Multitype and RKS System
+// CoreParam$$GetType1
+204a9f0:
+    b Pml_PokePara_CoreParam_GetType1
+// CoreParam$$GetType2
+204aaf0:
+    b Pml_PokePara_CoreParam_GetType2
+
+// Fix Illusion break animation
+1f2e070:
+    mov w1, #0xa7
+
+// Implement Unseen Fist
+// Section_CheckNotEffect_Guard$$check_Mamoru
+21b1700:
+    b Dpr_Battle_Logic_Section_CheckNotEffect_Guard_check_Mamoru
+
+// Change Flower Gift
+// Tokusei$$handler_FlowerGift_Weather
+1942720:
+    b HandlerFlowerGiftAtkprocEnd
+// Tokusei$$handler_FlowerGift_MemberInComp
+1942270:
+    b HandlerFlowerGiftMemberInComp
+// Tokusei$$handler_FlowerGift_TokOff
+1942920:
+    b HandlerFlowerGiftTokuseiDisable
+// Tokusei$$handler_FlowerGift_AirLock
+1942ab0:
+    b HandlerFlowerGiftNotifyAirlock
+// Tokusei$$handler_FlowerGift_TokChange
+1942c20:
+    b HandlerFlowerGiftChangeTokuseiBefore
+// Tokusei$$handler_FlowerGift_GotTok
+1942660:
+    b HandlerFlowerGiftChangeTokuseiAfter

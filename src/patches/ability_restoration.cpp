@@ -1,5 +1,5 @@
+/*
 #include "Dpr/Battle/Logic/Common.hpp"
-#include "Dpr/Battle/Logic/Calc.hpp"
 #include "Dpr/Battle/Logic/EventFactor.hpp"
 #include "Dpr/Battle/Logic/EventID.hpp"
 #include "Dpr/Battle/Logic/EventVar.hpp"
@@ -16,7 +16,6 @@
 #include "il2cpp-api.h"
 #include "il2cpp.hpp"
 #include "System/Array.hpp"
-#include "System/String.hpp"
 #include "util.hpp"
 #include "logger.hpp"
 
@@ -93,7 +92,6 @@ bool isBlademasterMove(int32_t wazaID)
 
 void handler_Blademaster_WazaPow(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method)
 {
-    socket_log_fmt("handler_Blademaster_WazaPow\n");
     int32_t evPokeID = Common::GetEventVar(args, EventVar::POKEID_ATK, (MethodInfo *) nullptr);
 
     if (evPokeID != pokeID)
@@ -105,7 +103,6 @@ void handler_Blademaster_WazaPow(EventFactor_EventHandlerArgs_o **args, uint8_t 
 
     if (isBlademasterMove(wazaID))
     {
-        socket_log_fmt("Blademaster boost: WazaPow!\n");
         // 1.2 * pow(2, 12) = 0x1333
         // So we're boosting by 1.2 here
         Common::MulEventVar(args, EventVar::POWER, 0x1333, (MethodInfo *) nullptr);
@@ -116,7 +113,6 @@ void handler_Blademaster_WazaPow(EventFactor_EventHandlerArgs_o **args, uint8_t 
 
 void handler_Blademaster_CritCheck(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method)
 {
-    socket_log_fmt("handler_Blademaster_CritCheck\n");
     int32_t evPokeID = Common::GetEventVar(args, EventVar::POKEID_ATK, (MethodInfo *) nullptr);
 
     if (evPokeID != pokeID)
@@ -128,7 +124,6 @@ void handler_Blademaster_CritCheck(EventFactor_EventHandlerArgs_o **args, uint8_
 
     if (isBlademasterMove(wazaID))
     {
-        socket_log_fmt("Blademaster boost: CritCheck!\n");
         int32_t critRank = Common::GetEventVar(args, EventVar::CRITICAL_RANK, (MethodInfo *) nullptr);
         Common::RewriteEventVar(args, EventVar::CRITICAL_RANK, (critRank + 1) & 0xff, (MethodInfo *) nullptr);
     }
@@ -414,12 +409,10 @@ void handler_WonderSurge(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, 
 
 System::Array<EventFactor_EventHandlerTable_o *> * ADD_Blademaster(MethodInfo *method)
 {
-    socket_log_fmt("ADD_Blademaster\n");
     if (sBlademasterEventHandlerTable == nullptr) {
-        socket_log_fmt("ADD_Blademaster init\n");
         sBlademasterEventHandlerTable = (System::Array<EventFactor_EventHandlerTable_o *> *) system_array_new(EventFactor_EventHandlerTable_Array_TypeInfo, 2);
-        sBlademasterEventHandlerTable->m_Items[0] = createEventHandlerTable(EventID::WAZA_POWER, Method_handler_TetunoKobusi, (Il2CppMethodPointer) &handler_Blademaster_WazaPow);
-        sBlademasterEventHandlerTable->m_Items[1] = createEventHandlerTable(EventID::CRITICAL_CHECK, Method_handler_TetunoKobusi, (Il2CppMethodPointer) &handler_Blademaster_CritCheck);
+        sBlademasterEventHandlerTable->m_Items[0] = CreateAbilityEventHandler(EventID::WAZA_POWER, (Il2CppMethodPointer) &handler_Blademaster_WazaPow);
+        sBlademasterEventHandlerTable->m_Items[1] = CreateAbilityEventHandler(EventID::CRITICAL_CHECK, (Il2CppMethodPointer) &handler_Blademaster_CritCheck);
     }
 
     return sBlademasterEventHandlerTable;
@@ -556,16 +549,13 @@ void AddHandler(System::Array<Tokusei_GET_FUNC_TABLE_ELEM_o> * getFuncTable, uin
 
 void * Tokusei_system_array_new(void * typeInfo, uint32_t len)
 {
-    socket_log_fmt("Tokusei_system_array_new\n");
     System::Array<Tokusei_GET_FUNC_TABLE_ELEM_o> * getFuncTable = (System::Array<Tokusei_GET_FUNC_TABLE_ELEM_o> *) system_array_new(typeInfo, len + NUM_NEW_ABILITIES);
     uint32_t idx = len;
 
     socket_log_fmt("Return idx: %08X\n", idx);
-    // AddHandler(getFuncTable, &idx, BLADEMASTER_ID, (Il2CppMethodPointer) &ADD_Blademaster);
-    // AddHandler(getFuncTable, &idx, BLADEMASTER_ID, (Il2CppMethodPointer) &ADD_ToxicDebris);
-    // AddHandler(getFuncTable, &idx, BLADEMASTER_ID, (Il2CppMethodPointer) &ADD_PurifyingSalt);
-    AddHandler(getFuncTable, &idx, BLADEMASTER_ID, (Il2CppMethodPointer) &ADD_ZeroToHero);
+    SetAbilityFunctionTable(getFuncTable, &idx, BLADEMASTER_ID, (Il2CppMethodPointer) &ADD_Blademaster);
 
     return getFuncTable;
 }
- 
+
+*/

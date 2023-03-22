@@ -9,6 +9,10 @@ namespace Pml
     {
         class Accessor {
             public:
+                uint16_t GetFormNo(MethodInfo *method);
+                uint32_t GetItemNo(MethodInfo *method);
+                int32_t GetMonsNo(MethodInfo *method);
+                int32_t GetTokuseiNo(MethodInfo *method);
                 // MonsNo GetMonsNo(); // 0x26A0670
                 // ushort GetFormNo(); // 0x26A1CE0
                 // 028000e0

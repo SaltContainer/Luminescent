@@ -1,4 +1,4 @@
-#pragma once
+#pragma once 
 
 #include "il2cpp.hpp"
 #include "Dpr/Battle/Logic/StrParam.hpp"
@@ -9,33 +9,27 @@ namespace Dpr
     {
         namespace Logic
         {
+            struct Section_FromEvent_FormChange_Description_c;
 
-            namespace Section_FromEvent_FormChange
-            {
-                struct Description_Fields {
-                    uint8_t pokeID;
-                    uint8_t formNo;
-                    bool isDontResetFormByOut;
-                    bool isEnableInCaseOfDead;
-                    bool isDisplayTokuseiWindow;
-                    bool isDisplayChangeEffect;
-                    StrParam_o* successMessage;
-                };
+            struct Section_FromEvent_FormChange_Description_Fields {
+                uint8_t pokeID;
+                uint8_t formNo;
+                bool isDontResetFormByOut;
+                bool isEnableInCaseOfDead;
+                bool isDisplayTokuseiWindow;
+                bool isDisplayChangeEffect;
+                struct StrParam_o* successMessage;
+            };
 
-                struct Description_c;
+            struct Section_FromEvent_FormChange_Description_o {
+                void ctor(MethodInfo *method);
 
-                struct Description_o {
-                    // 1fb4570
-                    void ctor(MethodInfo * method);
+                Section_FromEvent_FormChange_Description_c *klass;
+                void *monitor;
+                Section_FromEvent_FormChange_Description_Fields fields;
+            };
 
-                    Description_c *klass;
-                    void *monitor;
-                    Description_Fields fields;
-                };
-
-                // 4c5b2b8
-                extern void * Description_TypeInfo;
-            }
+            extern void *Section_FromEvent_FormChange_Description_TypeInfo;
         }
     }
 }
