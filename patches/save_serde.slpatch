@@ -27,5 +27,10 @@
 //    bl LoadBytes
 
 // Double up the save file (Replace Dpr.NX.SaveSystem$$Save)
-01ddf3e0:
-    b Dpr_NX_SaveSystem_Save
+//01ddf3e0:
+//    b Dpr_NX_SaveSystem_Save
+//01ddf45c:
+//    mov x0,x19
+//    mov w1,w21
+//    mov w2,w20
+//    b Dpr_NX_SaveSystem_Save

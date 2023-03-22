@@ -21,7 +21,7 @@ public:
     // 0239c640
     static bool SaveDataExists(MethodInfo *method);
     // 01ddf5a0
-    static bool MountSaveData(MethodInfo *method);
+    static void MountSaveData(MethodInfo *method);
   // static void SaveSystem_SaveAsync(Byte__Array *data,bool writeMain,bool writeBackup)
   // static void SaveAsync(byte[] data, bool writeMain, bool writeBackup)
 };

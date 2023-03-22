@@ -43,40 +43,69 @@ bool Dpr_NX_SaveSystem_Save(System_Byte_array *data, bool writeMain, bool writeB
   bool success = true;
   nn::fs::FileHandle fileHandle{};
   
-  system_load_typeinfo((void *)0x757e);
-  il2cpp_runtime_class_init(Dpr::Nx::SaveSystem_TypeInfo);
+  //system_load_typeinfo((void *)0x757e);
+  //il2cpp_runtime_class_init(Dpr::Nx::SaveSystem_TypeInfo);
 
-  Dpr::Nx::SaveSystem::MountSaveData((MethodInfo *) nullptr);
+  //socket_log_fmt("Before Mount\n");
+
+  //Dpr::Nx::SaveSystem::MountSaveData((MethodInfo *) nullptr);
+
+  //socket_log_fmt("After Mount\n");
+
+  socket_log_fmt("Skipped mount!!\n");
+  socket_log_fmt("data: %08X, writeMain: %d, writeBackup: %d\n", data, writeMain, writeBackup);
 
   if (writeMain) {
     bool createdFiles = true;
 
+    socket_log_fmt("Before Create SaveData\n");
+
     nn::fs::DeleteFile("SaveData:/SaveData.bin");
     createdFiles &= nn::fs::CreateFile("SaveData:/SaveData.bin",(s64)*(&data->max_length)).isSuccess();
+
+    socket_log_fmt("After Create SaveData\n");
+    socket_log_fmt("Before Create Luminescent_Backup\n");
 
     // Lumi Backup
     nn::fs::DeleteFile("SaveData:/Luminescent_Backup.bin");
     createdFiles &= nn::fs::CreateFile("SaveData:/Luminescent_Backup.bin",(s64)*(&data->max_length)).isSuccess();
 
+    socket_log_fmt("After Create Luminescent_Backup\n");
+
     if (!createdFiles) return false;
+
+    socket_log_fmt("Before Save SaveData\n");
 
     nn::fs::OpenFile(&fileHandle,"SaveData:/SaveData.bin",2);
     success &= nn::fs::WriteFile(fileHandle,0,data->m_Items,(s64)*(&data->max_length),nn::fs::WriteOption(1)).isSuccess();
     nn::fs::CloseFile(fileHandle);
 
+    socket_log_fmt("After Save SaveData\n");
+    socket_log_fmt("Before Save Luminescent_Backup\n");
+
     // Lumi Backup
     nn::fs::OpenFile(&fileHandle,"SaveData:/Luminescent_Backup.bin",2);
     success &= nn::fs::WriteFile(fileHandle,0,data->m_Items,(s64)*(&data->max_length),nn::fs::WriteOption(1)).isSuccess();
     nn::fs::CloseFile(fileHandle);
+
+    socket_log_fmt("After Save Luminescent_Backup\n");
   }
 
   if (writeBackup) {
+
+    socket_log_fmt("Before Create Backup\n");
+
     nn::fs::DeleteFile("SaveData:/Backup.bin");
     if (nn::fs::CreateFile("SaveData:/Backup.bin", (s64)*(&data->max_length)).isFailure()) return false;
+
+    socket_log_fmt("After Create Backup\n");
+    socket_log_fmt("Before Save Backup\n");
 
     nn::fs::OpenFile(&fileHandle,"SaveData:/Backup.bin",2);
     success &= nn::fs::WriteFile(fileHandle,0,data->m_Items,(s64)*(&data->max_length),nn::fs::WriteOption(1)).isSuccess();
     nn::fs::CloseFile(fileHandle);
+
+    socket_log_fmt("After Save Backup\n");
   }
 
   return success;
