@@ -6,11 +6,13 @@
 #include "Dpr/Battle/Logic/EventFactor.hpp"
 #include "Dpr/Battle/Logic/EventID.hpp"
 #include "Dpr/Battle/Logic/EventVar.hpp"
+#include "Dpr/Battle/Logic/ExPokePos.hpp"
 #include "Dpr/Battle/Logic/Handler.hpp"
 #include "Dpr/Battle/Logic/Handler/Waza.hpp"
 #include "Dpr/Battle/Logic/InterruptCode.hpp"
 #include "Dpr/Battle/Logic/PokeID.hpp"
 #include "Dpr/Battle/Logic/PokeActionCategory.hpp"
+#include "Dpr/Battle/Logic/Section_FromEvent_Message.hpp"
 #include "Dpr/Battle/Logic/Section_InterruptAction.hpp"
 #include "Dpr/Battle/Logic/Section_ProcessActionCore.hpp"
 #include "Dpr/Battle/Logic/SICKCONT.hpp"
@@ -59,6 +61,14 @@ constexpr int32_t PURSUIT = 228;
 constexpr int32_t U_TURN = 369;
 constexpr int32_t VOLT_SWITCH = 521;
 constexpr int32_t PARTING_SHOT = 575;
+constexpr int32_t GLITZY_GLOW = 736;
+constexpr int32_t BADDY_BAD = 737;
+constexpr int32_t FREEZY_FROST = 739;
+constexpr int32_t VEEVEE_VOLLEY = 741;
+
+// Side Effects
+constexpr int32_t EFFECT_REFLECT = 141;
+constexpr int32_t EFFECT_LIGHT_SCREEN = 145;
 
 // HanderTables
 static System::Array<EventFactor_EventHandlerTable_o *> * sHandlerTableJumpKick;
@@ -73,6 +83,10 @@ static System::Array<EventFactor_EventHandlerTable_o *> * sHandlerTableReturn;
 static System::Array<EventFactor_EventHandlerTable_o *> * sHandlerTableFrustration;
 static System::Array<EventFactor_EventHandlerTable_o *> * sHandlerTableMagnitude;
 static System::Array<EventFactor_EventHandlerTable_o *> * sHandlerTablePursuit;
+static System::Array<EventFactor_EventHandlerTable_o *> * sHandlerTableGlitzyGlow;
+static System::Array<EventFactor_EventHandlerTable_o *> * sHandlerTableBaddyBad;
+static System::Array<EventFactor_EventHandlerTable_o *> * sHandlerTableFreezyFrost;
+static System::Array<EventFactor_EventHandlerTable_o *> * sHandlerTableVeeveeVolley;
 
 void PursuitInterrupt(Section_ProcessActionCore_o *section, PokeAction_o *action, uint8_t targetPokeID) {
     if (((Section_o *)section)->CheckEncoreWazaChange(action, nullptr) != NULL_WAZA) return;
@@ -322,6 +336,61 @@ void HandlerPursuitGetWazaPri(EventFactor_EventHandlerArgs_o **args, uint8_t pok
     if (Common::GetEventVar(args, EventVar::POKEID_ATK, nullptr) != pokeID) return;
     HandlerMessage(args, pokeID, true);
 }
+//Baddy Bad
+void HandlerBaddyBadWallEffect(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method) {
+    if (Common::GetEventVar(args, EventVar::POKEID_ATK, nullptr) != pokeID) return;
+
+    BTL_SICKCONT_o sickCont = SICKCONT::MakeTurnParam(pokeID, 5, 0, nullptr);
+    int32_t side = Common::PokeIDtoSide(args, (uint8_t *) &pokeID, method);
+
+    bool retVal = Handler::Waza_o::common_SideEffectCore(args, pokeID, side, 0, &sickCont, 1, EFFECT_REFLECT, side, true, nullptr);
+
+    if (retVal)
+    {
+        Common::RewriteEventVar(args, EventVar::SUCCESS_FLAG, 1, nullptr);
+    }
+}
+//Freezy Frost
+void HandlerFreezyFrostHazeEffect(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method) {
+    if (Common::GetEventVar(args, EventVar::POKEID_ATK, nullptr) != pokeID) return;
+
+    //uint8_t uVar1 = Common::GetExistFrontPokePos(args, pokeID, nullptr);
+    //ExPokePos_o* local_28 = (ExPokePos_o *) il2cpp_object_new(ExPokePos_TypeInfo);
+    //local_28->ctor(9, uVar1, nullptr);
+
+    //Section_FromEvent_RankReset_Description_o *local_38 = (Section_FromEvent_RankReset_Description_o *) il2cpp_object_new(Section_FromEvent_RankReset_Description_TypeInfo);
+    //local_38->ctor(nullptr);
+
+    //(local_38->fields).pokeCount = Common::ExpandExistPokeID(args,&local_28,(local_38->fields).pokeID,(MethodInfo *)0x0);
+    //Common::RankReset(args, &local_38, nullptr);
+    //Section_FromEvent_Message::Description_o * local_40 = (Section_FromEvent_Message::Description_o *) il2cpp_object_new(Section_FromEvent_Message::Description_TypeInfo);
+    //local_40->ctor(nullptr);
+
+    //(local_40->fields).message->Setup(1, 0x74, nullptr);
+    //Common::Message(args, &local_40, nullptr);
+    Common::RewriteEventVar(args, EventVar::SUCCESS_FLAG, 1, nullptr);
+}
+//Glitzy Glow
+void HandlerGlitzyGlowWallEffect(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method) {
+    if (Common::GetEventVar(args, EventVar::POKEID_ATK, nullptr) != pokeID) return;
+
+    BTL_SICKCONT_o sickCont = SICKCONT::MakeTurnParam(pokeID, 5, 0, nullptr);
+    int32_t side = Common::PokeIDtoSide(args, (uint8_t *) &pokeID, method);
+
+    bool retVal = Handler::Waza_o::common_SideEffectCore(args, pokeID, side, 0, &sickCont, 1, EFFECT_LIGHT_SCREEN, side, true, nullptr);
+
+    if (retVal)
+    {
+        Common::RewriteEventVar(args, EventVar::SUCCESS_FLAG, 1, nullptr);
+    }
+}
+//Veevee Volley
+void HandlerVeeveeVolleyWazaPower(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method) {
+    if (Common::GetEventVar(args, EventVar::POKEID_ATK, nullptr) != pokeID) return;
+    int32_t power = Common::GetPokeParam(args, pokeID, nullptr)->GetFriendship(nullptr) * 2 / 5;
+    if (power < 1) power = 1;
+    Common::RewriteEventVar(args, EventVar::WAZA_POWER, power, nullptr);
+}
 
 EventFactor_EventHandlerTable_o * CreateMoveEventHandler(uint16_t eventID, Il2CppMethodPointer methodPointer) {
     return CreateEventHandler(eventID, Handler_Karagenki_WazaPowMethodInfo, methodPointer);
@@ -423,6 +492,34 @@ System::Array<EventFactor_EventHandlerTable_o *> * ADD_Pursuit(MethodInfo *metho
     }
     return sHandlerTablePursuit;
 }
+System::Array<EventFactor_EventHandlerTable_o *> * ADD_GlitzyGlow(MethodInfo *method) {
+    if (sHandlerTableGlitzyGlow == nullptr) {
+        sHandlerTableGlitzyGlow = (System::Array<EventFactor_EventHandlerTable_o *> *) system_array_new(EventFactor_EventHandlerTable_Array_TypeInfo, 1);
+        sHandlerTableGlitzyGlow->m_Items[0] = CreateMoveEventHandler(EventID::ADD_SICK, (Il2CppMethodPointer) &HandlerGlitzyGlowWallEffect);
+    }
+    return sHandlerTableGlitzyGlow;
+}
+System::Array<EventFactor_EventHandlerTable_o *> * ADD_BaddyBad(MethodInfo *method) {
+    if (sHandlerTableBaddyBad == nullptr) {
+        sHandlerTableBaddyBad = (System::Array<EventFactor_EventHandlerTable_o *> *) system_array_new(EventFactor_EventHandlerTable_Array_TypeInfo, 1);
+        sHandlerTableBaddyBad->m_Items[0] = CreateMoveEventHandler(EventID::ADD_SICK, (Il2CppMethodPointer) &HandlerBaddyBadWallEffect);
+    }
+    return sHandlerTableBaddyBad;
+}
+System::Array<EventFactor_EventHandlerTable_o *> * ADD_FreezyFrost(MethodInfo *method) {
+    if (sHandlerTableFreezyFrost == nullptr) {
+        sHandlerTableFreezyFrost = (System::Array<EventFactor_EventHandlerTable_o *> *) system_array_new(EventFactor_EventHandlerTable_Array_TypeInfo, 1);
+        sHandlerTableFreezyFrost->m_Items[0] = CreateMoveEventHandler(EventID::ADD_SICK, (Il2CppMethodPointer) &HandlerFreezyFrostHazeEffect);
+    }
+    return sHandlerTableFreezyFrost;
+}
+System::Array<EventFactor_EventHandlerTable_o *> * ADD_VeeveeVolley(MethodInfo *method) {
+    if (sHandlerTableVeeveeVolley == nullptr) {
+        sHandlerTableVeeveeVolley = (System::Array<EventFactor_EventHandlerTable_o *> *) system_array_new(EventFactor_EventHandlerTable_Array_TypeInfo, 1);
+        sHandlerTableVeeveeVolley->m_Items[0] = CreateMoveEventHandler(EventID::WAZA_POWER, (Il2CppMethodPointer) &HandlerVeeveeVolleyWazaPower);
+    }
+    return sHandlerTableVeeveeVolley;
+}
 
 //Adds an additional entry to GET_FUNC_TABLE
 void SetMoveFunctionTable(System::Array<Waza_GET_FUNC_TABLE_ELEM_o> * getFuncTable, uint32_t * idx, int32_t wazaNo, Il2CppMethodPointer methodPointer) {
@@ -436,7 +533,7 @@ void SetMoveFunctionTable(System::Array<Waza_GET_FUNC_TABLE_ELEM_o> * getFuncTab
 }
 
 // Remember to update when adding handlers
-constexpr uint32_t NEW_MOVES_COUNT = 13;
+constexpr uint32_t NEW_MOVES_COUNT = 16;
 
 //Entry point. Replaces system_array_new.
 void * Waza_system_array_new(void * typeInfo, uint32_t len) {
@@ -458,6 +555,10 @@ void * Waza_system_array_new(void * typeInfo, uint32_t len) {
     SetMoveFunctionTable(getFuncTable, &idx, FRUSTRATION, (Il2CppMethodPointer) &ADD_Frustration);
     SetMoveFunctionTable(getFuncTable, &idx, MAGNITUDE, (Il2CppMethodPointer) &ADD_Magnitude);
     SetMoveFunctionTable(getFuncTable, &idx, PURSUIT, (Il2CppMethodPointer) &ADD_Pursuit);
+    SetMoveFunctionTable(getFuncTable, &idx, GLITZY_GLOW, (Il2CppMethodPointer) &ADD_GlitzyGlow);
+    SetMoveFunctionTable(getFuncTable, &idx, BADDY_BAD, (Il2CppMethodPointer) &ADD_BaddyBad);
+    //SetMoveFunctionTable(getFuncTable, &idx, FREEZY_FROST, (Il2CppMethodPointer) &ADD_FreezyFrost);
+    SetMoveFunctionTable(getFuncTable, &idx, VEEVEE_VOLLEY, (Il2CppMethodPointer) &ADD_VeeveeVolley);
 
     return getFuncTable;
 }

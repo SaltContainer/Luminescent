@@ -3,6 +3,7 @@
 #include "il2cpp.hpp"
 #include "Dpr/Battle/Logic/BTL_POKEPARAM.hpp"
 #include "Dpr/Battle/Logic/EventFactor.hpp"
+#include "Dpr/Battle/Logic/ExPokePos.hpp"
 #include "Dpr/Battle/Logic/Section_FromEvent_Message.hpp"
 #include "Dpr/Battle/Logic/Section_FromEvent_FormChange.hpp"
 #include "Dpr/Battle/Logic/Section_FieldEffect_Add_Description.hpp"
@@ -50,6 +51,8 @@ namespace Dpr
                 static bool CheckUnbreakablePokeItem(uint16_t monsno, uint16_t itemID, MethodInfo *method);
                 // 1d0a010
                 static int32_t PokeIDtoOpponentSide (EventFactor_EventHandlerArgs_o ** args, uint8_t * pokeID, MethodInfo * method);
+                // 1d09f50
+                static int32_t PokeIDtoSide (EventFactor_EventHandlerArgs_o ** args, uint8_t * pokeID, MethodInfo * method);
                 // 1d09d20
                 static int32_t GetWorkValue(EventFactor_EventHandlerArgs_o ** args, uint8_t workIdx, MethodInfo * method);
                 // 1d09da0
@@ -66,6 +69,8 @@ namespace Dpr
                 static bool RankReset(EventFactor_EventHandlerArgs_o **args, Section_FromEvent_RankReset_Description_o **desc, MethodInfo *method);
                 static bool RewriteEventVar(EventFactor_EventHandlerArgs_o **args, uint16_t label, int32_t value, MethodInfo *method);
                 static PokeAction_o * SearchByPokeID(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, bool isSkipGStart, bool isSkipNull, MethodInfo *method);
+                static uint8_t GetExistFrontPokePos(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method);
+                static uint8_t ExpandExistPokeID(EventFactor_EventHandlerArgs_o **args, ExPokePos_o **exPos, System_Byte_array *dst_pokeID, MethodInfo *method);
             };
 
             extern void * Common_TypeInfo;
