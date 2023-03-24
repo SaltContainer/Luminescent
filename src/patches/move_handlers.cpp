@@ -533,7 +533,7 @@ void SetMoveFunctionTable(System::Array<Waza_GET_FUNC_TABLE_ELEM_o> * getFuncTab
 }
 
 // Remember to update when adding handlers
-constexpr uint32_t NEW_MOVES_COUNT = 16;
+constexpr uint32_t NEW_MOVES_COUNT = 14;
 
 //Entry point. Replaces system_array_new.
 void * Waza_system_array_new(void * typeInfo, uint32_t len) {
@@ -555,8 +555,8 @@ void * Waza_system_array_new(void * typeInfo, uint32_t len) {
     SetMoveFunctionTable(getFuncTable, &idx, FRUSTRATION, (Il2CppMethodPointer) &ADD_Frustration);
     SetMoveFunctionTable(getFuncTable, &idx, MAGNITUDE, (Il2CppMethodPointer) &ADD_Magnitude);
     SetMoveFunctionTable(getFuncTable, &idx, PURSUIT, (Il2CppMethodPointer) &ADD_Pursuit);
-    SetMoveFunctionTable(getFuncTable, &idx, GLITZY_GLOW, (Il2CppMethodPointer) &ADD_GlitzyGlow);
-    SetMoveFunctionTable(getFuncTable, &idx, BADDY_BAD, (Il2CppMethodPointer) &ADD_BaddyBad);
+    //SetMoveFunctionTable(getFuncTable, &idx, GLITZY_GLOW, (Il2CppMethodPointer) &ADD_GlitzyGlow);
+    //SetMoveFunctionTable(getFuncTable, &idx, BADDY_BAD, (Il2CppMethodPointer) &ADD_BaddyBad);
     //SetMoveFunctionTable(getFuncTable, &idx, FREEZY_FROST, (Il2CppMethodPointer) &ADD_FreezyFrost);
     SetMoveFunctionTable(getFuncTable, &idx, VEEVEE_VOLLEY, (Il2CppMethodPointer) &ADD_VeeveeVolley);
 
