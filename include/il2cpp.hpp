@@ -252,6 +252,14 @@ struct UnityEngine_MonoBehaviour_Fields {
  UnityEngine_Behaviour_Fields super;
 };
 
+struct UnityEngine_Transform_Fields {
+    UnityEngine_Component_Fields super;
+};
+
+struct UnityEngine_Transform_o {
+    UnityEngine_Transform_Fields fields;
+};
+
 struct System_Delegate_Fields {
 	intptr_t method_ptr;
 	intptr_t invoke_impl;

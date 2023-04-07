@@ -3,6 +3,7 @@
 
 #include "System/Array.hpp"
 #include "System/String.hpp"
+#include "Pml/PokePara/SavePokeParty.hpp"
 #include "il2cpp.hpp"
 
 namespace DPData
@@ -875,7 +876,7 @@ namespace DPData
         uint8_t direction;
         uint8_t expansionStatus;
         int32_t goodCount;
-        struct UgStoneStatue_array* ugStoneStatue;
+        UgStoneStatue_array* ugStoneStatue;
         bool isEnable;
     };
 
@@ -886,7 +887,7 @@ namespace DPData
     struct UGRecord_Fields {
         uint32_t talkPlayerDataID;
         uint32_t talkPlayerCount;
-        struct UgSecretBase_o myBase;
+        UgSecretBase_o myBase;
     };
 
     struct UGRecord_o {

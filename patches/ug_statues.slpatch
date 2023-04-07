@@ -1,0 +1,5 @@
+[target=main, version=bd_130]
+
+// Rewrite Dpr.UnderGround.StatueBuff$$CalcStatueData
+01bc3240:
+  b Dpr_UnderGround_StatueBuff_CalcStatueData
