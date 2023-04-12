@@ -1,0 +1,44 @@
+[target=main, version=bd_130]
+
+// Hook into Unity Action constructor of Poketch Next Button
+// Dpr.UI.PoketchWindow$$OnCreate
+// bl UnityEngine.Events.UnityAction$$.ctor
+// 01e66b4c
+01e66b4c:
+	bl poketchNextButtonUnityActionConstructorHook
+
+// Hook into Initialization of Poketch Next Button
+// Dpr.UI.PoketchWindow$$OnCreate
+// bl Dpr.UI.PoketchButton$$Initialize
+01e66b5c:
+	bl poketchNextButtonInitializeHook
+
+// Hook into IsInRange check of Poketch Next Button
+// Dpr.UI.PoketchWindow$$OnUpdate
+// bl Dpr.UI.PoketchWindow$$IsInRange
+01e67a3c:
+	bl poketchCheckIfPressButton
+
+// Change <= to <
+// Dpr.UI.PoketchWindow$$OnUpdate
+// b.ge 0x01e6819c
+01e67c70:
+	b.gt 0x01E0052C
+
+// Set the internal loop counter to 0
+01e67be8:
+	bl poketchButtonCheckLoopSetCount
+
+// Increment the internal loop counter
+01e67c20:
+	bl poketchButtonCheckLoopAddCountOne
+
+// When setting poketchButton, check if final loop and set backButton
+// Dpr.UI.PoketchWindow$$OnUpdate
+// ldr x8,[x8, #0x18]
+01e67cb4:
+	mov x0, x8
+	bl poketchButtonCheckIfFinal
+	mov x8,x0
+	cmp x8, xzr
+	b.ne 0x01e67d1c
