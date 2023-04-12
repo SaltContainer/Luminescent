@@ -11,7 +11,7 @@
 #include "util.hpp"
 
 UnityEngine::Events::UnityAction *backButtonAction = nullptr;
-Dpr::UI::PoketchButton *backButton = nullptr;
+Dpr::UI::PoketchButton *newButton = nullptr;
 Dpr::UI::PoketchButton *changeButton = nullptr;
 int count = 0;
 
@@ -51,8 +51,8 @@ void poketchNextButtonUnityActionConstructorHook(UnityEngine::Events::UnityActio
 void poketchNextButtonInitializeHook(Dpr::UI::PoketchButton *__this, UnityEngine::Events::UnityAction *callback, uint32_t seEventId, MethodInfo *method) {
 	socket_log_fmt("Hook Called: Initialize called on poketch next button");
 
-	// Call the original initialize method for the next button
-	__this->Initialize(callback, seEventId, method);
+	// Call the original initialize method with the back action
+	__this->Initialize(backButtonAction, seEventId, method);
 	changeButton = __this;
 	
 	// Find the back button (Final sibling of next button)
@@ -60,10 +60,10 @@ void poketchNextButtonInitializeHook(Dpr::UI::PoketchButton *__this, UnityEngine
 	System::Type *poketchButtonType = __this->GetType(nullptr);
 	int32_t childCount = parentTransform->get_childCount(nullptr);
 	UnityEngine::Transform *childTransform = parentTransform->getChild(childCount - 1, nullptr);
-	backButton = (Dpr::UI::PoketchButton*) childTransform->GetComponent(poketchButtonType, nullptr);
+	newButton = (Dpr::UI::PoketchButton*) childTransform->GetComponent(poketchButtonType, nullptr);
 
-	// Call the initialize method on the previous button
-	backButton->Initialize(backButtonAction, seEventId, nullptr);
+	// Call the initialize method on the new button with the forwards action
+	newButton->Initialize(callback, seEventId, nullptr);
 }
 
 // Hook into IsInRange check of Poketch Next Button
@@ -83,10 +83,10 @@ bool poketchCheckIfPressButton(Dpr::UI::PoketchWindow *__this, Dpr::UI::PoketchB
 
 	// Check if we are in range of the back button
 	// If so, process back buttons on push function
-	bool isInRangeBackButton = __this->IsInRange(backButton, posX, posY, method);
+	bool isInRangeBackButton = __this->IsInRange(newButton, posX, posY, method);
 	if (isInRangeBackButton)
 	{
-		backButton->OnPush(nullptr);
+		newButton->OnPush(nullptr);
 	}
 
 	// return as normal
@@ -115,10 +115,10 @@ Dpr::UI::PoketchButton** poketchButtonCheckIfFinal(Dpr::UI::PoketchAppBase *app)
 	if (count == numberOfButtons)
 	{
 		// set forward button
-		return &changeButton;
+		return &newButton;
 	} else if (count > numberOfButtons) {
 		// set the back button
-		return &backButton;
+		return &changeButton;
 	} else {
 		// Return null to check app buttons
 		return nullptr;
