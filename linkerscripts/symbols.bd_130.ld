@@ -331,6 +331,7 @@ _ZN3Dpr6Battle5Logic6Common17RemoveFieldEffectEPPNS1_30EventFactor_EventHandlerA
 
 _ZN10PlayerWork15get_Enc_SV_DataEv = 0x02cf2840 - 0x05708000;
 _ZN10PlayerWork15set_Enc_SV_DataEN6DPData13ENC_SV_DATA_oE = 0x02cf27d0 - 0x05708000;
+_ZN10PlayerWork13get_playerSexEP10MethodInfo = 0x02ce2cd0 - 0x05708000;
 
 StringLiteral_9194 = 0x4ca7d88 - 0x05708000;
 StringLiteral_9195 = 0x4ca7d90 - 0x05708000;

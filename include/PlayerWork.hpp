@@ -270,6 +270,7 @@ public:
 
   static int32_t get_rivalPokeType(MethodInfo *method);
 
+  static bool get_playerSex(MethodInfo *method);
 
   static int32_t get_zoneID(MethodInfo *method);
 

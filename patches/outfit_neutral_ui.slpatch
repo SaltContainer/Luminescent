@@ -1,0 +1,12 @@
+[target=main, version=bd_130]
+// Replace System.String$$Format in Dpr.UI.ZukanCompareWeightController$$LoadPlayerIcon
+01bb17b8:
+	bl ReturnWeightSpriteName
+
+// Replace System.String$$Format in Dpr.UI.TownmapPlayerIcon$$GetSpritePlayerIcon
+0184fc08:
+	bl ReturnTownMapSpriteName
+
+// Rewrite Dpr.UI.UIManager$$GetCharacterBagData
+017c5710:
+    b ReturnBaseUIDatabaseBag
