@@ -68,6 +68,8 @@ namespace Dpr
 
                 uint8_t GetFriendship(MethodInfo *method);
 
+                uint8_t GetValue(int32_t vid, MethodInfo *method);
+
                 Pml::PokePara::CoreParam * GetSrcDataConst(MethodInfo *method);
 
 

@@ -27,7 +27,9 @@ const uint16_t POKEID = 2;
 const uint16_t POKEID_ATK = 3;
 const uint16_t POKEPOS = 13;
 const uint16_t WAZAID = 18;
+const uint16_t WAZA_TYPE = 18;
 const uint16_t CHECK_HIDE = 24; // Used Fly/Dig before
+const uint16_t DAMAGE_TYPE = 27; // Physical / Special
 const uint16_t WAZA_POWER = 51;
 const uint16_t WAZA_POWER_RATIO = 52;
 const uint16_t WORK_ADRS = 68;
@@ -39,6 +41,13 @@ const uint16_t HIDE_FLY = 3;
 const uint16_t HIDE_DIG = 5;
 // ContFlag
 const uint16_t IS_DIG = 5;
+// BTL_POKEPARAM.ValueID
+constexpr int32_t BPP_ATTACK = 8;
+constexpr int32_t BPP_SP_ATTACK = 10;
+// WazaDamageType
+constexpr int32_t NONE = 0;
+constexpr int32_t PHYSICAL = 1;
+constexpr int32_t SPECIAL = 2;
 
 constexpr size_t BTL_STRID_STD_Magnitude1 = 119;
 constexpr size_t BTL_STRID_STD_Magnitude2 = 120;
@@ -59,6 +68,7 @@ constexpr int32_t HIJUMPKICK_WAZANO = 136;
 constexpr int32_t RETURN_WAZANO = 216;
 constexpr int32_t FRUSTRATION_WAZANO = 218;
 constexpr int32_t MAGNITUDE_WAZANO = 222;
+constexpr int32_t HIDDENPOWER_WAZANO = 237;
 constexpr int32_t SILVERWIND_WAZANO = 318;
 constexpr int32_t SKYUPPERCUT_WAZANO = 327;
 constexpr int32_t OMINIOUSWIND_WAZANO = 466;
@@ -131,6 +141,31 @@ void handler_Magnitude_WazaPow(EventFactor_EventHandlerArgs_o **args, uint8_t po
     Common::RewriteEventVar(args, WAZA_POWER, waza_power, (MethodInfo *) nullptr);
 }
 
+void handler_HiddenPower_WazaParam(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method)
+{
+    socket_log_fmt("handler_HiddenPower_WazaParam\n");
+    int32_t evPokeID = Common::GetEventVar(args, POKEID, (MethodInfo *) nullptr);
+
+    if (evPokeID != pokeID)
+    {
+        return;
+    }
+
+    // Rewrite Type
+    uint8_t type = Common::GetMezapaType(args, pokeID, (MethodInfo *) nullptr);
+    Common::RewriteEventVar(args, WAZA_TYPE, type, (MethodInfo *) nullptr);
+
+    // Change to physical
+    BTL_POKEPARAM_o * bpp = Common::GetPokeParam(args, pokeID, (MethodInfo *) nullptr);
+    int32_t atk = bpp->GetValue(BPP_ATTACK, (MethodInfo *) nullptr);
+    int32_t spatk = bpp->GetValue(BPP_SP_ATTACK, (MethodInfo *) nullptr);
+
+    if (atk > spatk)
+    {
+        Common::RewriteEventVar(args, DAMAGE_TYPE, PHYSICAL, (MethodInfo *) nullptr);
+    }
+}
+
 void handler_Magnitude_Msg(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method)
 {
     system_load_typeinfo(DAT_03a6bb14);
@@ -187,8 +222,10 @@ int32_t YUBI_WO_FURU_ENTRIES[NUM_YUBI_WO_FURU_MOVES] = {
 static System::Array<EventFactor_EventHandlerTable_o *> * sReturnEventHandlerTable = nullptr;
 static System::Array<EventFactor_EventHandlerTable_o *> * sFrustrationEventHandlerTable = nullptr;
 static System::Array<EventFactor_EventHandlerTable_o *> * sMagnitudeEventHandlerTable = nullptr;
+static System::Array<EventFactor_EventHandlerTable_o *> * sHiddenPowerEventHandlerTable = nullptr;
 
 const int16_t EVENT_ID_REQWAZA_MSG = 27;
+const int16_t EVENT_ID_WAZA_PARAM = 42;
 const int16_t EVENT_ID_WAZA_POWER = 70;
 
 // Dpr.Battle.Logic.Handler.Waza$$
@@ -229,11 +266,49 @@ System::Array<EventFactor_EventHandlerTable_o *> * ADD_Magnitude(MethodInfo *met
     return sMagnitudeEventHandlerTable;
 }
 
+System::Array<EventFactor_EventHandlerTable_o *> * ADD_HiddenPower(MethodInfo *method)
+{
+    socket_log_fmt("ADD_HiddenPower\n");
+    if (sHiddenPowerEventHandlerTable == nullptr) {
+        // socket_log_fmt("ADD_HiddenPower init\n");
+        sHiddenPowerEventHandlerTable = (System::Array<EventFactor_EventHandlerTable_o *> *) system_array_new(EventFactor_EventHandlerTable_Array_TypeInfo, 1);
+        sHiddenPowerEventHandlerTable->m_Items[0] = createEventHandlerTable(EVENT_ID_WAZA_PARAM, Handler_Karagenki_WazaPowMethodInfo, (Il2CppMethodPointer) &handler_HiddenPower_WazaParam);
+    }
 
+    return sHiddenPowerEventHandlerTable;
+}
+
+Waza_GET_FUNC_TABLE_ELEM_o * FindFuncFromWazaNo(System::Array<Waza_GET_FUNC_TABLE_ELEM_o> * getFuncTable, uint32_t len, int32_t wazaNo)
+{
+    // This does not currently work because we add new moves before the regular ones are added. Possibly change with ExLaunch
+    for (int i=0; i<len; i++)
+    {
+        Waza_GET_FUNC_TABLE_ELEM_o * elem = &getFuncTable->m_Items[i];
+        if (elem->fields.waza == wazaNo) return elem;
+    }
+
+    socket_log_fmt("Couldn't find existing handler for %d\n", wazaNo);
+    return nullptr;
+}
+
+void AddToExistingHandler(System::Array<Waza_GET_FUNC_TABLE_ELEM_o> * getFuncTable, uint32_t len, int32_t wazaNo, Il2CppMethodPointer methodPointer)
+{
+    Waza_GET_FUNC_TABLE_ELEM_o * elem = FindFuncFromWazaNo(getFuncTable, len, wazaNo);
+    if (elem == nullptr)
+    {
+        // Shouldn't happen, but just in case, do nothing
+        return;
+    }
+
+    MethodInfo * method = copyMethodInfo(Method_ADD_Karagenki, methodPointer);
+    Waza_HandlerGetFunc_o * func = (Waza_HandlerGetFunc_o *) il2cpp_object_new(Waza_HandlerGetFunc_TypeInfo);
+    socket_log_fmt("entry.method: %08X\n", methodPointer);
+    func->ctor(0, method);
+    elem->fields.func = func;
+}
 
 void AddHandler(System::Array<Waza_GET_FUNC_TABLE_ELEM_o> * getFuncTable, uint32_t * idx, int32_t wazaNo, Il2CppMethodPointer methodPointer)
 {
-
     MethodInfo * method = copyMethodInfo(Method_ADD_Karagenki, methodPointer);
     Waza_GET_FUNC_TABLE_ELEM_o * elem = &getFuncTable->m_Items[*idx];
     socket_log_fmt("Got GET_FUNC_TABLE_ELEM at %i\n", *idx);
@@ -258,6 +333,9 @@ void * Waza_system_array_new(void * typeInfo, uint32_t len)
     socket_log_fmt("Magnitude idx: %08X\n", idx);
     AddHandler(getFuncTable, &idx, MAGNITUDE_WAZANO, (Il2CppMethodPointer) &ADD_Magnitude);
 
+    AddToExistingHandler(getFuncTable, len, HIDDENPOWER_WAZANO, (Il2CppMethodPointer) &ADD_HiddenPower);
+
+    socket_log_fmt("Waza_system_array_new done\n");
     return getFuncTable;
 }
 

@@ -45,6 +45,8 @@ namespace Dpr
                 static void AttachSkipCheckHandler(EventFactor_EventHandlerArgs_o ** args, EventFactor_SkipCheckHandler_o ** handler, MethodInfo * method);
                 // 1d0a0c0
                 static void DetachSkipCheckHandler(EventFactor_EventHandlerArgs_o ** args, MethodInfo * method);
+                // 1d0e5c0
+                static uint8_t GetMezapaType(EventFactor_EventHandlerArgs_o **args, uint8_t pokeID, MethodInfo *method);
             };
 
             extern void * Common_TypeInfo;

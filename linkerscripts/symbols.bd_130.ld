@@ -178,6 +178,7 @@ _ZN3Pml8PokePara8Accessor9GetWazaNoEhP10MethodInfo = 0x024a5d70 - 0x05708000;
 
 _ZN3Dpr6Battle5Logic15BTL_POKEPARAM_o20CONFRONT_REC_IsMatchEhP10MethodInfo = 0x01fe39f0 - 0x05708000;
 _ZN3Dpr6Battle5Logic15BTL_POKEPARAM_o7GetItemEP10MethodInfo = 0x01fdfd50 - 0x05708000;
+_ZN3Dpr6Battle5Logic15BTL_POKEPARAM_o8GetValueEiP10MethodInfo = 0x01fdd010 - 0x05708000;
 
 _ZN3Dpr6Battle5Logic12MainModule_o18setSubProcForSetupEPNS1_20BATTLE_SETUP_PARAM_oEP10MethodInfo = 0x02476980 - 0x056E6000;
 _ZN3Dpr6Battle5Logic12MainModule_o19setup_raid_srcPartyEP10MethodInfo = 0x02479570 - 0x056E6000;
@@ -317,6 +318,7 @@ _ZN3Dpr6Battle5Logic30EventFactor_SkipCheckHandler_o4ctorElP10MethodInfo = 0x1d1
 _ZN3Dpr6Battle5Logic37EventFactor_SkipCheckHandler_TypeInfoE = 0x4c5b278 - 0x05708000;
 _ZN3Dpr6Battle5Logic6Common22AttachSkipCheckHandlerEPPNS1_30EventFactor_EventHandlerArgs_oEPPNS1_30EventFactor_SkipCheckHandler_oEP10MethodInfo = 0x1d0a090 - 0x05708000;
 _ZN3Dpr6Battle5Logic6Common22DetachSkipCheckHandlerEPPNS1_30EventFactor_EventHandlerArgs_oEP10MethodInfo = 0x1d0a0c0 - 0x05708000;
+_ZN3Dpr6Battle5Logic6Common13GetMezapaTypeEPPNS1_30EventFactor_EventHandlerArgs_oEhP10MethodInfo = 0x1d0e5c0 - 0x05708000;
 DAT_7104cbc6f7 = 0x04cbc6f7 - 0x05708000;
 _ZN3Dpr5Field18SwayGrass_InfoTypeE = 0x4c5ac58 - 0x05708000;
 _Z12handler_HazePPN3Dpr6Battle5Logic30EventFactor_EventHandlerArgs_oEhP10MethodInfo = 0x17fc490 - 0x05708000;
