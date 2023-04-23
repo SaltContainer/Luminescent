@@ -4,6 +4,7 @@
 #include "il2cpp.hpp"
 
 #include "Pml/PokePara/SavePokeParty.hpp"
+#include "Pml/PokeParty.hpp"
 #include "Dpr/BallDeco.hpp"
 #include "Dpr/Box.hpp"
 #include "Dpr/Item.hpp"
@@ -271,6 +272,8 @@ public:
   static int32_t get_rivalPokeType(MethodInfo *method);
 
   static bool get_playerSex(MethodInfo *method);
+  
+  static Pml::PokeParty_o * get_playerParty(MethodInfo *method);
 
   static int32_t get_zoneID(MethodInfo *method);
 
