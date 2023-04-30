@@ -1,0 +1,4 @@
+[target=main, version=bd_130]
+// Rewrite Dpr.MsgWindow.WindowMsgText$$Initialize
+01ddddb0:
+    b WindowMsgText_Initialize

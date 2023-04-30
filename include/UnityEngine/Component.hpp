@@ -36,9 +36,17 @@ namespace UnityEngine
         Component_c *klass;
         void *monitor;
         Component_Fields fields;
+
+        // 01f48340
+        Il2CppObject* GetComponent(MethodInfo *method);
     };
 
     struct Component_StaticFields
     {
     };
+
+    // 04b79950
+    extern MethodInfo ** PTR_Component_RectTransform_GetComponent;
+    // 04b79638
+    extern MethodInfo ** PTR_Component_TextMeshProUGUI_GetComponent;
 }
