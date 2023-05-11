@@ -1,0 +1,4 @@
+[target=main, version=bd_130]
+// Rewrite ColorVariation$$LateUpdate
+018ecd90:
+    b ColorVariation_LateUpdate
