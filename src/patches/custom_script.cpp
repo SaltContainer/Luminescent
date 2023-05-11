@@ -486,6 +486,26 @@ bool ToggleCollisionBox(Dpr::EvScript::EvDataManager_o * manager)
     return true;
 }
 
+// Sets the player's ColorVariation id.
+// Arguments:
+//   [Work, Number] variation: The ColorVariation id to set the player to.
+bool SetPlayerColorIndex(Dpr::EvScript::EvDataManager_o * manager)
+{
+    socket_log_fmt("_SET_PLAYER_COLOR_INDEX\n");
+    system_load_typeinfo((void *)0x6c1b);
+    
+    System::Array<EvData::Aregment_o>* args = manager->fields._evArg;
+
+    if (args->max_length >= 2)
+    {
+        int32_t index = GetWorkOrIntValue(args->m_Items[1]);
+        socket_log_fmt("Calling set_colorID with color index: %d\n", index);
+        PlayerWork::set_colorID(index, nullptr);
+    }
+
+    return true;
+}
+
 // Handles overriden and new script commands, then calls the original method to handle the rest normally.
 bool RunEvCmdExtended(Dpr::EvScript::EvDataManager_o *__this, EvData::EvCmdID index, MethodInfo *method)
 {
@@ -508,6 +528,8 @@ bool RunEvCmdExtended(Dpr::EvScript::EvDataManager_o *__this, EvData::EvCmdID in
             return PartyBoxRelease(__this);
         case EvData::EvCmdID::_TOGGLE_COLLISION_BOX:
             return ToggleCollisionBox(__this);
+        case EvData::EvCmdID::_SET_PLAYER_COLOR_INDEX:
+            return SetPlayerColorIndex(__this);
         default:
             break;
     }

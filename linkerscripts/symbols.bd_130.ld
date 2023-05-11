@@ -440,3 +440,4 @@ _ZN10PlayerWork20set_WalkEncountCountEiP10MethodInfo = 0x02cf2c00 - 0x05708000;
 _ZN8ItemWork10IsUseSprayEPtP10MethodInfo = 0x01aeb720 - 0x05708000;
 
 _ZN25ColorVariation_Property_o6UpdateEP35UnityEngine_MaterialPropertyBlock_oP10MethodInfo = 0x018ecef0 - 0x05708000;
+_ZN10PlayerWork11set_colorIDEiP10MethodInfo = 0x02cef870 - 0x05708000;

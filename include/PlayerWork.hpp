@@ -305,7 +305,8 @@ public:
   void OnPreSave(MethodInfo *method);
   // 02cf2c00
   static void set_WalkEncountCount(int32_t value, MethodInfo *method);
-
+  // 02cef870
+  static void set_colorID(int32_t value, MethodInfo *method);
 
   static DPData::ENC_SV_DATA_o get_Enc_SV_Data(DPData::ENC_SV_DATA_o *__return_storage_ptr__, MethodInfo * method);
   static void set_Enc_SV_Data(DPData::ENC_SV_DATA_o value);
