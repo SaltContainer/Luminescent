@@ -15,3 +15,7 @@
 // Rewrite Dpr.EvScript.EvDataManager$$SpLabel_Scene
 02c42de0:
   b SpLabel_Scene
+
+// Overwrite call to FlagWork$$SetSysFlag in Dpr.EvScript.EvDataManager$$MapJumpInit
+02c426e0:
+  bl SetArriveFlag

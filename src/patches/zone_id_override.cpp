@@ -2,6 +2,7 @@
 
 #include "Dpr/EvScript/EvDataManager.hpp"
 #include "zoneID.hpp"
+#include "PlayerWork.hpp"
 #include "System/String.hpp"
 #include "util.hpp"
 
@@ -1730,5 +1731,14 @@ void SpLabel_Scene(Dpr::EvScript::EvDataManager_o *__this, int32_t id, MethodInf
         System::String *label = System::String::Concat(StringLiteral_9194, System::String::CreateString(&(getZoneNames()[id][0])), StringLiteral_9197, (MethodInfo *)nullptr);
         __this->fields._callLabel_UpdateSP = label;
         _system_array_init(&(__this->fields)._callLabel_UpdateSP);
+    }
+}
+
+void SetArriveFlag(int32_t flagNo, bool value, MethodInfo *methodInfo)
+{
+    system_load_typeinfo((void *)0x4baf);
+    if (flagNo <= 963)
+    {
+        PlayerWork::SetSytemFlag(flagNo, value, nullptr);
     }
 }

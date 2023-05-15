@@ -403,3 +403,5 @@ _ZN3Dpr6Battle5Logic39Section_FromEvent_SetItem_Description_o4ctorEP10MethodInfo
 _ZN3Dpr6Battle5Logic6Common7SetItemEPPNS1_30EventFactor_EventHandlerArgs_oEPPNS1_39Section_FromEvent_SetItem_Description_oEP10MethodInfo = 0x01d0bd20 - 0x05708000;
 _ZN8ItemWork9IsAddItemEiiP10MethodInfo = 0x01aea500 - 0x05708000;
 _ZN8ItemWork7AddItemEiiP10MethodInfo = 0x01aea3a0 - 0x05708000;
+
+_ZN10PlayerWork12SetSytemFlagEibP10MethodInfo = 0x02cedad0 - 0x05708000;
