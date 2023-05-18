@@ -61,12 +61,20 @@ namespace Pml
                 uint8_t GetRareType(MethodInfo * method);
                 // 2048740
                 int32_t GetSeikaku(MethodInfo *method);
+                // 2045ce0
+                uint8_t GetTokuseiIndex(MethodInfo *method);
+                // 2048ac0
+                void SetTokuseiIndex(uint8_t tokuseiIndex, MethodInfo *method);
 
                 bool IsNull(MethodInfo * method);
                 bool IsEgg(int32_t type, MethodInfo * method);
                 uint16_t GetItem(MethodInfo * method);
                 void SetItem(uint16_t itemno, MethodInfo *method);
 
+                // 2043bd0
+                bool IsHpZero(MethodInfo *method);
+                // 2043e30
+                uint32_t GetLevel(MethodInfo *method);
 
                 System::Collections::Generic::HashSet_WazaNo__o * CollectRemindableWaza( MethodInfo *method );
 
