@@ -1,10 +1,12 @@
 #include <cmath>
 
 #include "il2cpp.hpp"
+#include "il2cpp-api.h"
 
 #include "Audio/AudioManager.hpp"
 #include "Dpr/Box/BoxPokemonWork.hpp"
 #include "Dpr/EvScript/EvDataManager.hpp"
+#include "Dpr/UI/SoftwareKeyboard.hpp"
 #include "EvData/EvCmdID.hpp"
 #include "EvData/ArgType.hpp"
 #include "GameData/DataManager.hpp"
@@ -154,6 +156,71 @@ bool SetWeather(Dpr::EvScript::EvDataManager_o * manager)
     }
 
     return true;
+}
+
+// Opens a text input window, and compares the input to specific phrases.
+// Arguments:
+//   [Label] prompt: The prompt that shows up on the text input window.
+//   [Work, Number] length: The maximum length of the input text.
+//   [Work] result: The work in which to put the result in. -1 for no match.
+bool TextInput(Dpr::EvScript::EvDataManager_o * manager)
+{
+    socket_log_fmt("_NAMEIN\n");
+    system_load_typeinfo((void *)0x446a);
+    System::Array<EvData::Aregment_o>* args = manager->fields._evArg;
+    Dpr::EvScript::EvScriptData_o * evData = manager->fields._evData;
+
+    if (manager->fields._softwareKeyboardSubState == 2)
+    {
+        return true;
+    }
+
+    if (manager->fields._softwareKeyboardSubState == 0)
+    {
+        manager->fields._softwareKeyboardSubState = 1;
+
+        System::String * promptLabelIndex = System::String::CreateString("SS_strinput_044");
+        if (args->max_length >= 2)
+        {
+            if (args->m_Items[1].fields.argType == EvData::ArgType::String)
+            {
+                promptLabelIndex = evData->fields.EvData->GetString(args->m_Items[1].fields.data, nullptr);
+            }
+        }
+
+        System::String * prompt = Dpr::UI::SoftwareKeyboard_o::GetMessageText(promptLabelIndex, nullptr);
+
+        Dpr::UI::SoftwareKeyboard_Param_o * params = (Dpr::UI::SoftwareKeyboard_Param_o *) il2cpp_object_new(Dpr::UI::SoftwareKeyboard_Param_TypeInfo);
+        params->ctor(nullptr);
+        params->fields.text = System::String::CreateString("");
+        params->fields.textMinLength = 1;
+        params->fields.textMaxLength = 10;
+        if (args->max_length >= 3)
+        {
+            int32_t value = GetWorkOrIntValue(args->m_Items[2]);
+            if (value > 0) params->fields.textMaxLength = value;
+        }
+        params->fields.headerText = prompt;
+        params->fields.invalidCharFlag = 4;
+
+        socket_log_fmt("onInputCheck: %08X\n", Dpr::EvScript::EvDataManager___c_TypeInfo->static_fields->__9__1295_0);
+        OnInputCheckFunc_t * onInputCheck = Dpr::EvScript::EvDataManager___c_TypeInfo->static_fields->__9__1295_0;
+        if (onInputCheck == nullptr)
+        {
+            onInputCheck = (OnInputCheckFunc_t *) il2cpp_object_new(*PTR_OnInputCheckFunc_TypeInfo);
+            onInputCheck->ctor((void*)Dpr::EvScript::EvDataManager___c_TypeInfo->static_fields->__9, *PTR_OnInputCheckFunc_MethodInfo, *PTR_OnInputCheckFuncCtor_MethodInfo);
+            Dpr::EvScript::EvDataManager___c_TypeInfo->static_fields->__9__1295_0 = onInputCheck;
+        }
+
+        
+        OnCompleteAction_t * onComplete = (OnCompleteAction_t *) il2cpp_object_new(*PTR_OnCompleteAction_TypeInfo);
+        onComplete->ctor((void*)manager, *PTR_OnCompleteAction_MethodInfo, *PTR_OnCompleteActionCtor_MethodInfo);
+
+        socket_log_fmt("Ready to open!\n");
+        Dpr::UI::SoftwareKeyboard_o::Open(params, onInputCheck, onComplete, nullptr);
+    }
+
+    return false;
 }
 
 // Rotates a gear in the Sunyshore gym.
@@ -494,6 +561,8 @@ bool RunEvCmdExtended(Dpr::EvScript::EvDataManager_o *__this, EvData::EvCmdID in
     {
         case EvData::EvCmdID::_SET_WEATHER:
             return SetWeather(__this);
+        case EvData::EvCmdID::_NAMEIN:
+            return TextInput(__this);
         //case EvData::EvCmdID::_ROTATE_ELEC_GYM_GEAR:
         //    return RotateSunyshoreGymGear(__this);
         case EvData::EvCmdID::_STOP_EFFECT:

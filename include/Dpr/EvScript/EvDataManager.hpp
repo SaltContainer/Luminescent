@@ -4,6 +4,7 @@
 #include "Dpr/FieldObjectMove.hpp"
 #include "Dpr/FieldObjectRotateYaw.hpp"
 #include "Dpr/EvScript/EvScriptData.hpp"
+#include "Dpr/UI/SoftwareKeyboard.hpp"
 #include "Effect/EffectInstance.hpp"
 #include "System/String.hpp"
 #include "System/Array.hpp"
@@ -372,7 +373,23 @@ namespace Dpr
             struct System_Collections_Generic_Dictionary_int__GameObject__o* _poolLoadObjects;
         };
 
-        struct EvDataManager_c;
+        struct EvDataManager_RGCTXs {
+        };
+
+        struct EvDataManager_VTable {
+            VirtualInvokeData _0_Equals;
+            VirtualInvokeData _1_Finalize;
+            VirtualInvokeData _2_GetHashCode;
+            VirtualInvokeData _3_ToString;
+        };
+
+        struct EvDataManager_c {
+            Il2CppClass_1 _1;
+            struct EvDataManager_StaticFields* static_fields;
+            struct EvDataManager_RGCTXs* rgctx_data;
+            Il2CppClass_2 _2;
+            struct EvDataManager_VTable vtable;
+        };
 
         struct EvDataManager_o {
             // 01affd30
@@ -394,5 +411,68 @@ namespace Dpr
             void *monitor;
             EvDataManager_Fields fields;
         };
+
+        struct EvDataManager_StaticFields {
+            EvDataManager_o* _instanse;
+            bool IsFirstInitializedAfterSaveDataLoad;
+            struct System_Collections_Generic_Dictionary_int__MonsNo__o* KasekiFukugenTable;
+            struct System_ValueTuple_int__int__int__array* PokemonSizeTable;
+            bool EventCameraEnable;
+        };
+
+        struct EvDataManager___c_Fields {
+        };
+
+        struct EvDataManager___c_RGCTXs {
+        };
+
+        struct EvDataManager___c_VTable {
+            VirtualInvokeData _0_Equals;
+            VirtualInvokeData _1_Finalize;
+            VirtualInvokeData _2_GetHashCode;
+            VirtualInvokeData _3_ToString;
+        };
+
+        struct EvDataManager___c_c {
+            Il2CppClass_1 _1;
+            struct EvDataManager___c_StaticFields* static_fields;
+            EvDataManager___c_RGCTXs* rgctx_data;
+            Il2CppClass_2 _2;
+            EvDataManager___c_VTable vtable;
+        };
+
+        struct EvDataManager___c_o {
+            EvDataManager___c_c *klass;
+            void *monitor;
+            EvDataManager___c_Fields fields;
+        };
+
+        struct EvDataManager___c_StaticFields {
+            struct EvDataManager___c_o* __9;
+            struct System_Predicate_FieldObjectMoveCode__o* __9__292_0;
+            struct System_Predicate_FieldObjectEntity__o* __9__292_1;
+            System_Func_string__SoftwareKeyboard_ErrorState__ValueTuple_bool__string___o* __9__773_0;
+            System_Func_string__SoftwareKeyboard_ErrorState__ValueTuple_bool__string___o* __9__830_0;
+            struct System_Action_UIContestInfo__o* __9__908_0;
+            struct System_Action_UISellItemUg__o* __9__1058_2;
+            struct System_Action_UISellUgItem__o* __9__1058_3;
+            struct System_Action_UIUGBaseExpansion__o* __9__1058_4;
+            struct UnityEngine_Events_UnityAction_UIWindow__o* __9__1248_1;
+            System_Func_string__SoftwareKeyboard_ErrorState__ValueTuple_bool__string___o* __9__1295_0;
+            System_Func_string__SoftwareKeyboard_ErrorState__ValueTuple_bool__string___o* __9__1502_0;
+            struct UnityEngine_Events_UnityAction_ContextMenuItem__o* __9__1515_0;
+            struct UnityEngine_Events_UnityAction_EffectInstance__o* __9__1602_1;
+            struct UnityEngine_Events_UnityAction_EffectInstance__o* __9__1605_1;
+            struct System_Action_BoxWindow__BoxWindow_SelectedPokemon____o* __9__1612_0;
+            struct System_Action_o* __9__1621_0;
+            struct UnityEngine_Events_UnityAction_UIWindow__o* __9__1625_0;
+            struct System_Action_FieldObjectEntity__o* __9__1659_0;
+            struct System_Predicate_EvDataManager_AssetReqOpeRef__o* __9__1778_0;
+            struct System_Comparison_EvDataManager_LoadObjectData__o* __9__1782_0;
+            struct System_Predicate_FieldObjectEntity__o* __9__1795_0;
+        };
+
+        // 04c5ed48
+        extern EvDataManager___c_c * EvDataManager___c_TypeInfo;
     }
 }

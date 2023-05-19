@@ -438,3 +438,6 @@ _ZN8ZoneWork15IsSpFishingZoneEiP10MethodInfo = 0x017da600 - 0x05708000;
 _ZN3Dpr5Field9SpFishing10CheckPointEP24UnityEngine_Vector2Int_oP10MethodInfo = 0x019b55c0 - 0x05708000;
 _ZN10PlayerWork20set_WalkEncountCountEiP10MethodInfo = 0x02cf2c00 - 0x05708000;
 _ZN8ItemWork10IsUseSprayEPtP10MethodInfo = 0x01aeb720 - 0x05708000;
+
+_ZN3Dpr2UI31SoftwareKeyboard_Param_TypeInfoE = 0x04c5ee00 - 0x05708000;
+_ZN3Dpr8EvScript26EvDataManager___c_TypeInfoE = 0x04c5ed48 - 0x05708000;
