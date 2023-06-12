@@ -23,3 +23,14 @@
 // Dummy out radar slot overwriting in Dpr.Field.FieldEncount$$WildEncSingle
 019b4c80:
     b #0x88
+
+// Allow partner 0 for double wilds
+02c3ada0:
+    nop
+
+//01f6e3e0:
+//    mov x0, x19
+//    mov w1, w22
+//    mov w2, w20
+//    bl BATTLE_SETUP_Wild_partner_fix
+//    b #0x34

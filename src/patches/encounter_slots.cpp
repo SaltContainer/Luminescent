@@ -3,6 +3,8 @@
 
 #include "AttributeID.hpp"
 #include "DpData.hpp"
+#include "Dpr/Battle/Logic/BATTLE_SETUP_PARAM.hpp"
+#include "Dpr/Battle/Logic/Setup.hpp"
 #include "Dpr/Field/EncountResult.hpp"
 #include "Dpr/Field/FieldEncount.hpp"
 #include "Dpr/Field/FieldEncount/ENC_FLD_SPA.hpp"
@@ -77,6 +79,12 @@ const int32_t ENCOUNTER_TYPE_SINGLE = 0;
 const int32_t ENCOUNTER_TYPE_DOUBLE = 1;
 const int32_t ENCOUNTER_TYPE_SAFARI = 2;
 const int32_t ENCOUNTER_TYPE_MOVEPOKE = 3;
+
+const int32_t RULE_DOUBLE = 1;
+
+const int32_t MULTIMODE_SINGLE = 0;
+const int32_t MULTIMODE_DOUBLEWILD_SOLO = 4;
+const int32_t MULTIMODE_DOUBLEWILD_PARTNER = 6;
 
 const int32_t FEEBAS_MONSNO = 349;
 
@@ -368,6 +376,32 @@ bool IsPartyEmpty()
     return false;
 }
 
+// Checks if this pokémon can battle.
+bool CanPartyMemberBattle(Pml::PokePara::CoreParam *member)
+{
+    if (member == nullptr) return false;
+    if (member->IsEgg(2, nullptr)) return false;
+    if (member->IsHpZero(nullptr)) return false;
+    
+    return true;
+}
+
+// Returns the amount of pokémon in the player's party that can battle.
+int32_t GetUsablePartyAmount()
+{
+    Pml::PokeParty_o *party = PlayerWork::get_playerParty(nullptr);
+    int32_t amount = 0;
+    for (uint32_t i=0; i<party->fields.m_memberCount; i++)
+    {
+        if (CanPartyMemberBattle((Pml::PokePara::CoreParam *)party->GetMemberPointer(i, nullptr)))
+        {
+            amount++;
+        }
+    }
+
+    return amount;
+}
+
 // Returns the attributes of the given tile.
 XLSXContent::MapAttributeTable_SheetData_o * GetAttributeOfTile(UnityEngine_Vector2Int_o tile)
 {
@@ -457,7 +491,7 @@ void CheckRepel(Dpr::Field::FieldEncount::ENC_FLD_SPA_o *spaStruct)
         for (uint32_t i=0; i<party->fields.m_memberCount; i++)
         {
             Pml::PokePara::CoreParam *currentPoke = (Pml::PokePara::CoreParam *)party->GetMemberPointer(i, nullptr);
-            if (!currentPoke->IsEgg(2, nullptr) && !currentPoke->IsHpZero(nullptr))
+            if (CanPartyMemberBattle(currentPoke))
             {
                 firstLevel = currentPoke->GetLevel(nullptr);
                 break;
@@ -963,9 +997,51 @@ Dpr::Field::EncountResult_o * SetSweetEncount_EncounterSlots(MethodInfo *method)
         {
             SetSafariSlots(slots);
         }
-        
-        Dpr::Field::FieldEncount::SWAY_ENC_INFO_o swayInfo;
-        bool randomWildEncounter = Dpr::Field::FieldEncount_o::WildEncSingle((Pml::PokePara::PokemonParam_o*)firstPokemon, &encounterHolder, fieldEnc, slots, spaStruct, swayInfo, nullptr);
-        return ReturnEncounterSlots(randomWildEncounter, &encounterHolder, &spaStruct, slots, true, true);
+
+        // If player has at least 2 alive pokes
+        /*if (GetUsablePartyAmount() >= 2)
+        {
+            encounterHolder->fields.Type = ENCOUNTER_TYPE_DOUBLE;
+            encounterHolder->fields.Partner = 0;
+
+            bool randomWildEncounter = Dpr::Field::FieldEncount_o::SetEncountData((Pml::PokePara::PokemonParam_o*)firstPokemon, 0, spaStruct, slots, 0, 1, &encounterHolder, nullptr);
+            if (!randomWildEncounter)
+            {
+                return nullptr;
+            }
+
+            randomWildEncounter = Dpr::Field::FieldEncount_o::SetEncountData((Pml::PokePara::PokemonParam_o*)firstPokemon, 0, spaStruct, slots, 0, 3, &encounterHolder, nullptr);
+            return ReturnEncounterSlots(randomWildEncounter, &encounterHolder, &spaStruct, slots, true, true);
+        }*/
+        //else // Only 1 poke in party
+        //{
+            Dpr::Field::FieldEncount::SWAY_ENC_INFO_o swayInfo;
+            bool randomWildEncounter = Dpr::Field::FieldEncount_o::WildEncSingle((Pml::PokePara::PokemonParam_o*)firstPokemon, &encounterHolder, fieldEnc, slots, spaStruct, swayInfo, nullptr);
+            return ReturnEncounterSlots(randomWildEncounter, &encounterHolder, &spaStruct, slots, true, true);
+        //}
     }
+}
+
+// DOUBLE WILDS PARTNER FIX
+// This doesn't work and crashes...
+void BATTLE_SETUP_Wild_partner_fix(Dpr::Battle::Logic::BATTLE_SETUP_PARAM_o *bp, int32_t partnerTrainerID, int32_t rule)
+{
+    socket_log_fmt("BATTLE_SETUP_Wild_partner_fix\n");
+    system_load_typeinfo((void *)0x7c75);
+
+    if (rule != RULE_DOUBLE)
+    {
+        bp->fields.multiMode = MULTIMODE_SINGLE;
+    }
+    else if (partnerTrainerID == 0)
+    {
+        bp->fields.multiMode = MULTIMODE_DOUBLEWILD_SOLO;
+    }
+    else
+    {
+        bp->fields.multiMode = MULTIMODE_DOUBLEWILD_PARTNER;
+        Dpr::Battle::Logic::Setup::normalTrainer(bp, 2, partnerTrainerID, nullptr);
+    }
+
+    socket_log_fmt("Done fixing the partner wild!\n");
 }
