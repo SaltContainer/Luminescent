@@ -764,7 +764,7 @@ void nameRater(PokemonWindow_DisplayClass25_0_o * displayClass, ContextMenuItem_
     swKeyboardParam = (SoftwareKeyboard_Param_o *) il2cpp_object_new(*PTR_SoftwareKeyboard_Param_TypeInfo);
     swKeyboardParam->ctor((MethodInfo *) nullptr);
     // Not sure why it was being set to a string literaly instead of the nickname that was set earlier.
-    swKeyboardParam->fields.text = *PTR_StringLiteral_398; // corePokeParam->GetNickName((MethodInfo *) nullptr); //
+    swKeyboardParam->fields.text = System::String::CreateString(""); // corePokeParam->GetNickName((MethodInfo *) nullptr); //
     swKeyboardParam->fields.textMinLength = 1;
     swKeyboardParam->fields.textMaxLength = SoftwareKeyboard_o::LanguageMaxLength(6, -1, (MethodInfo *) nullptr);
     swKeyboardParam->fields.headerText = SoftwareKeyboard_o::GetMessageText(headerLabel, (MethodInfo *) nullptr);

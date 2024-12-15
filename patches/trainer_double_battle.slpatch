@@ -1,4 +1,4 @@
-[target=main, version=bd_130]
-
-2c5015c:
+[target=main, version=sp_130]
+// Dpr.EvScript.EvDataManager$$BattleTrainer
+01B12D4C: // 02C5015C
     bl Dpr_EncountTools_SetupBattleTrainer

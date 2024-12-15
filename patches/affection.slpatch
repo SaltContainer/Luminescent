@@ -1,7 +1,4 @@
-[target=main, version=bd_113]
-0247f5c0:  // Dpr.Battle.Logic.MainModule$$IsFriendshipActive
-    b affection
-
-[target=main, version=bd_130]
-020378d0:
+[target=main, version=sp_130]
+// Dpr.Battle.Logic.MainModule$$IsFriendshipActive
+02484560: // 020378D0
     b affection

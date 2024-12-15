@@ -1,43 +1,40 @@
-[target=main, version=bd_112]
-27d1e80:
+[target=main, version=sp_130]
+// Pml.PokePara.CalcTool$$DecideFormNoFromHoldItem
+027C16C0: // 024AEB90
     b DecideFormNoFromHoldItem
-02144a38:
+
+// Dpr.Battle.Logic.Common$$CheckCantChangeItemPoke
+021762B8: // 01D0D938
     b CheckUnbreakablePokeItem
-02144c44:
+
+// Dpr.Battle.Logic.Common$$CheckCantStealPoke
+021764C4: // 01D0DB44
     b CheckUnbreakablePokeItem
-01c71284:
-    bl CheckUnbreakablePokeItem
-01c712b0:
-    bl CheckUnbreakablePokeItem
-01c712dc:
-    bl CheckUnbreakablePokeItem
-01c71308:
-    bl CheckUnbreakablePokeItem
-01e05f20:
-    bl CheckUnbreakablePokeItem
-01e114ec:
-    bl CheckUnbreakablePokeItem
-01e11528:
+
+// Dpr.Battle.Logic.Handler.Tokusei$$handler_Monohiroi
+01DA33A0: // 01954440
     bl CheckUnbreakablePokeItem
 
-[target=main, version=bd_130]
-24aeb90:
-    b DecideFormNoFromHoldItem
-1d0d938:
-    b CheckUnbreakablePokeItem
-1d0db44:
-    b CheckUnbreakablePokeItem
-1954440:
+// Dpr.Battle.Logic.Handler.Tokusei$$kyousei_commonProc
+01DAE96C: // 0195FA0C
     bl CheckUnbreakablePokeItem
-195fa0c:
+
+// Dpr.Battle.Logic.Handler.Tokusei$$kyousei_commonProc
+01DAE9A8: // 0195FA48
     bl CheckUnbreakablePokeItem
-195fa48:
+
+// Dpr.Battle.Logic.Handler.Waza$$handler_Trick
+01C570D4: // 01808174
     bl CheckUnbreakablePokeItem
-1808174:
+
+// Dpr.Battle.Logic.Handler.Waza$$handler_Trick
+01C57100: // 018081A0
     bl CheckUnbreakablePokeItem
-18081a0:
+
+// Dpr.Battle.Logic.Handler.Waza$$handler_Trick
+01C5712C: // 018081CC
     bl CheckUnbreakablePokeItem
-18081cc:
-    bl CheckUnbreakablePokeItem
-18081f8:
+
+// Dpr.Battle.Logic.Handler.Waza$$handler_Trick
+01C57158: // 018081F8
     bl CheckUnbreakablePokeItem

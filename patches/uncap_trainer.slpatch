@@ -1,36 +1,45 @@
-[target=main, version=bd_130]
-018c1580:
+[target=main, version=sp_130]
+// TrainerWork$$Reset
+01D104E0: // 018C1580
     b TrainerWork_Reset
     ret
 
-018c1740:
+// void TrainerWork__ResetWinFlag (int32_t index, const MethodInfo* method);
+01D106A0: // 018C1740
     b TrainerWork_ResetWinFlag
     ret
 
-018c1670:
+// void TrainerWork__SetWinFlag (int32_t index, const MethodInfo* method);
+01D105D0: // 018C1670
     b TrainerWork_SetWinFlag
     ret
 
-018c1800:
+// bool TrainerWork__GetWinFlag (int32_t id, const MethodInfo* method);
+01D10760: // 018C1800
     b TrainerWork_GetWinFlag
     ret
 
-018c18a0:
+// bool TrainerWork__GetWinFlag (int32_t index, const MethodInfo* method);
+01D10800: // 018C18A0
     b TrainerWork_GetWinFlag
     ret
 
-018c1940:
+// void TrainerWork__SetBattleSaercher (int32_t index, const MethodInfo* method);
+01D108A0: // 018C1940
     b TrainerWork_SetBattleSaercher
     ret
 
-018c1a10:
+// void TrainerWork__ReSetBattleSaercher (int32_t index, const MethodInfo* method);
+01D10970: // 018C1A10
     b TrainerWork_ReSetBattleSaercher
     ret
 
-018c1ac0:
+// TrainerWork$$AllResetBattleSaercher
+01D10A20: // 018C1AC0
     b TrainerWork_AllResetBattleSaercher
     ret
 
-018c1bb0:
+// bool TrainerWork__GetBattleSearcher (int32_t index, const MethodInfo* method);
+01D10B10: // 018C1BB0
     b TrainerWork_GetBattleSearcher
     ret

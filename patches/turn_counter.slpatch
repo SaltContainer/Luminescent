@@ -1,10 +1,12 @@
-[target=main, version=bd_130]
-2173f1c:
+[target=main, version=sp_130]
+// Dpr.Battle.Logic.Section_TurnEnd$$Execute
+02576ADC: // 02173F1C
     bl IncBattleCount
-// Weird call happening here:
+
 // Dpr.Battle.Logic.BattleCounter$$.ctor
-18790d8:
+01CC8038: // 018790D8
     b bc_init
+
 // Dpr.Battle.Logic.BattleEnv$$Initialize
-187c204:
+01CCB164: // 0187C204
     bl bc_init

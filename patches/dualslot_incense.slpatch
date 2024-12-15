@@ -1,16 +1,14 @@
-[target=main, version=bd_130]
-// Don't display message to make things play nice
-1bdeefc:
+[target=main, version=sp_130]
+// Dpr.UI.UIBag.<>c__DisplayClass127_1$$<ShowItemContextMenu>b__11
+0204787C: // 01BDEEFC
     nop
 
-// void Dpr.UI.UIBag.<>c__DisplayClass127_1$$<ShowItemContextMenu>b__11(Dpr_UI_UIBag___c__DisplayClass127_1_o *__this,MethodInfo *method)
-1bdedfc:
+// Dpr.UI.UIBag.<>c__DisplayClass127_1$$<ShowItemContextMenu>b__11
+0204777C: // 01BDEDFC
     mov x1, x19
     bl UIManager_UseDSPlayerItem
 
-// 2cf2e30:
-//    b PlayerWork_get_DoubleSlot
-
-19b3bd4:
+// Dpr.Field.FieldEncount$$FieldEncount_Check
+01E1C554: // 019B3BD4
     ldr x0, [sp, #0xB0]
     bl PlayerWork_set_DoubleSlot

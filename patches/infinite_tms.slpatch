@@ -1,37 +1,16 @@
-[target=main, version=bd_113]
-020fd490:  // Dpr.UI.UIBag.<>c__DisplayClass130_0$$<UseWazaMachine>b__5
+[target=main, version=sp_130]
+// Dpr.UI.UIBag.<>c__DisplayClass134_0$$<UseWazaMachine>b__5
+02049BA0: // 01BE1220
     ret
 
-// Dpr.UI.UIBag$$EndUseItemAction
-01be1460:  // Dpr.UI.UIBag.<>c__DisplayClass130_0$$<UseWazaMachine>b__6
+// Dpr.UI.UIBag.<>c__DisplayClass134_0$$<UseWazaMachine>b__6
+02049DE0: // 01BE1460
     ret
 
-// Skip the "TM will break" text
-// Dpr.UI.UIMsgWindowController$$OpenMsgWindow
-01be0d40: // void Dpr.UI.UIBag.<>c__DisplayClass130_0$$<UseWazaMachine>b__0
+// Dpr.UI.UIBag.<>c__DisplayClass134_0$$<UseWazaMachine>b__0
+020496C0: // 01BE0D40
     b SkipTMBreak
 
-//
-// Dpr.UI.UIMsgWindowController$$CloseMsgWindow
-01be0fec: // Dpr.UI.UIBag.<>c__DisplayClass130_0$$<UseWazaMachine>b__3
-    bl Dpr_UI_UIMsgWindowController_CloseMsgWindow
-
-
-[target=main, version=bd_130]
-// Dpr.UI.UIBag$$EndUseItemAction
-01be1220:  // Dpr.UI.UIBag.<>c__DisplayClass130_0$$<UseWazaMachine>b__5
-    ret
-
-// Dpr.UI.UIBag$$EndUseItemAction
-01be1460:  // Dpr.UI.UIBag.<>c__DisplayClass130_0$$<UseWazaMachine>b__6
-    ret
-
-// Skip the "TM will break" text
-// Dpr.UI.UIMsgWindowController$$OpenMsgWindow
-01be0d40: // void Dpr.UI.UIBag.<>c__DisplayClass130_0$$<UseWazaMachine>b__0
-    b SkipTMBreak
-
-// 
-// Dpr.UI.UIMsgWindowController$$CloseMsgWindow
-01be0fec: // Dpr.UI.UIBag.<>c__DisplayClass130_0$$<UseWazaMachine>b__3
+// Dpr.UI.UIBag.<>c__DisplayClass134_0$$<UseWazaMachine>b__3
+0204996C: // 01BE0FEC
     bl Dpr_UI_UIMsgWindowController_CloseMsgWindow

@@ -1,9 +1,4 @@
-[target=main, version=bd_130]
-
-// Rewrite Dpr.EncountTools$$GetMonohiroiItem
-02c3d790:
+[target=main, version=sp_130]
+// Dpr.EncountTools$$GetMonohiroiItem
+01B00380: // 02C3D790
     b GetPickupItem
-
-// DEBUG: 100% for Pickup to proc after Battle
-//02c3d1f0:
-//    cmp x0, #0x64

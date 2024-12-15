@@ -1,11 +1,4 @@
-[target=main, version=bd_130]
-// 01d68a10:
-//01d603e0:
-//    b BadgeWork_IsGet
-
-// 025684c0:
-//    b Dpr_Battle_Logic_Section_WazaExec_CheckFail_1st_checkSabotageType
-
-// 02568aac:
-020349e0:
+[target=main, version=sp_130]
+// Dpr.Battle.Logic.MainModule$$GetMaxFollowPokeLevel
+02481670: // 020349E0
     b GetMaxFollowPokeLevel

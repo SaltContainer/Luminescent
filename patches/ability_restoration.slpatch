@@ -1,6 +1,8 @@
-[target=main, version=bd_130]
-1964f24:
+[target=main, version=sp_130]
+// Dpr.Battle.Logic.Handler.Tokusei$$.cctor
+01DB3E84: // 01964F24
     bl Tokusei_system_array_new
 
-1942fd0:
+// Dpr.Battle.Logic.Handler.Tokusei$$handler_FlowerGift_Power
+01D91F30: // 01942FD0
     cmp x0, #0x2

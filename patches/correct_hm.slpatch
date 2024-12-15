@@ -1,16 +1,12 @@
-[target=main, version=bd_130]
-
+[target=main, version=sp_130]
 // FieldPlayerEntity$$CheckSwim
-// Switch check to Pastoria Gym (Now the 5th gym)
-1daca9c:
+0221541C: // 01DACA9C
     bl CheckSurfFlags
 
-// Swap 0x7f to 0x80 (Pastoria to Hearthome)
 // FieldPoketch$$.cctor
-1dbc4cc:
+02224E4C: // 01DBC4CC
     mov w1, 0x80
 
-// Swap 0x80 to 0x7f (Hearthome to Pastoria)
 // FieldPoketch$$.cctor
-1dbc4f8:
+02224E78: // 01DBC4F8
     mov w1, 0x7f

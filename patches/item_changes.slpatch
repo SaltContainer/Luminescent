@@ -1,4 +1,4 @@
-[target=main, version=bd_130]
-// Rewrite Dpr.UI.UIBag.<>c__DisplayClass135_0$$<UseApplicationItem>b__1
-01be1580:
+[target=main, version=sp_130]
+// Dpr.UI.UIBag.<>c__DisplayClass135_0$$<UseApplicationItem>b__1
+02049F00: // 01BE1580
     b AbilityPatchUsability

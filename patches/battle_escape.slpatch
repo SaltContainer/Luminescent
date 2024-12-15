@@ -1,8 +1,8 @@
-[target=main, version=bd_130]
-// Rewrite Dpr.Battle.Logic.MainModule$$IsEscapeEnableBattle
-02034b70:
+[target=main, version=sp_130]
+// Dpr.Battle.Logic.MainModule$$IsEscapeEnableBattle
+02481800: // 02034B70
     b MainModule_IsEscapeEnableBattle
 
-// Rewrite Dpr.Battle.Logic.MainModule$$GetEscapeMode
-02034bb0:
+// Dpr.Battle.Logic.MainModule$$GetEscapeMode
+02481840: // 02034BB0
     b MainModule_GetEscapeMode

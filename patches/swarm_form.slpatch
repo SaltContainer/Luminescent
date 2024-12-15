@@ -1,5 +1,5 @@
-[target=main, version=bd_130]
-// 
-2caee90:
+[target=main, version=sp_130]
+// TairyouHasseiPokeManager$$Loading
+01C18B70: // 02CAEE90
     mov x2, x19
     bl SwarmForm_getAssetBundleName

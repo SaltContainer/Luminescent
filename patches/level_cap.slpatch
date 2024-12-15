@@ -1,4 +1,4 @@
-[target=main, version=bd_130]
-// 01d72f40:
-018f8040:
+[target=main, version=sp_130]
+// Dpr.Battle.Logic.Exp$$getexp_calc_adjust_level
+01D46FA0: // 018F8040
     b Dpr_Battle_Logic_Exp_getexp_calc_adjust_level

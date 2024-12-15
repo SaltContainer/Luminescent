@@ -1,25 +1,20 @@
-[target=main, version=bd_130]
-// Rewrite Dpr.Field.FieldEncount$$FieldEncount_Check
-// This method is used for most wild encounters.
-019b30b0:
+[target=main, version=sp_130]
+// Dpr.Field.FieldEncount$$FieldEncount_Check
+01E1BA30: // 019B30B0
     b FieldEncount_Check_EncounterSlots
 
-// Rewrite Dpr.Field.FieldEncount$$GetSafariScopeMonster
-// This method is used for safari binoculars.
-019b82c0:
+// Dpr.Field.FieldEncount$$GetSafariScopeMonster
+01E20C40: // 019B82C0
     b GetSafariScopeMonster_EncounterSlots
 
-// Rewrite Dpr.Field.FieldEncount$$SetFishingEncount
-// This method is used for fishing encounters.
-019b5130:
+// Dpr.Field.FieldEncount$$SetFishingEncount
+01E1DAB0: // 019B5130
     b SetFishingEncount_EncounterSlots
 
-// Rewrite Dpr.Field.FieldEncount$$SetSweetEncount
-// This method is used for sweet scent encounters.
-019b5950:
+// Dpr.Field.FieldEncount$$SetSweetEncount
+01E1E2D0: // 019B5950
     b SetSweetEncount_EncounterSlots
 
-
-// Dummy out radar slot overwriting in Dpr.Field.FieldEncount$$WildEncSingle
-019b4c80:
+// Dpr.Field.FieldEncount$$WildEncSingle
+01E1D600: // 019B4C80
     b #0x88

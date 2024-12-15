@@ -1,12 +1,6 @@
-[target=main, version=bd_130]
-// 1bdd8fc:
-//    b Dpr_UI_UIBag_OnPokemonPartyClickedToUseItem
-
-
-// x19 is Dpr_UI_UIBag_o *__this
-// x22 is level
-// x25 is 100
-185cc94:
+[target=main, version=sp_130]
+// Dpr.UI.UIBag$$OnPokemonPartyClickedToUseItem
+01CABBF4: // 0185CC94
     mov w0, w22
     mov x1, x19
     bl isValidRareCandy
@@ -15,5 +9,6 @@
     nop
     nop
 
-185eb8c:
+// Dpr.UI.UIBag$$EndUseItemAction
+01CADAEC: // 0185EB8C
     bl ItemWork_SubItem

@@ -1,8 +1,8 @@
-[target=main, version=bd_130]
-// 01e225d0:
-02cd9ab0:
+[target=main, version=sp_130]
+// HoneyWork$$GetMonsNo
+01E12C80: // 02CD9AB0
     b HoneyWork_GetMonsNo
 
-// 01b34c04:
-02c72e14:
+// Dpr.EvScript.EvDataManager$$EvCmdHoneyTreeBattleSet
+01B35A04: // 02C72E14
     bl HoneyWork_GetLevel

@@ -1,33 +1,8 @@
-[target=main, version=bd_130]
-// 1804930:
-//     b handler_Karagenki_AtkPow
-// 18049f0:
-//    b handler_Karagenki_WazaPow
-//1818940:
-//    b handler_YubiWoFuru
-// 1818aa0:
-//    b handler_YubiWoFuru_Msg
-18298a8:
+[target=main, version=sp_130]
+// Dpr.Battle.Logic.Handler.Waza$$.cctor
+01C78808: // 018298A8
     bl Waza_system_array_new
-// 182af30:
-//    bl Karagenki_ctor
-// 182ccb4:
-//    bl YubiWoFuru_ctor
-// 182a530:
-//    bl TripleKick_ctor
-// Should be fine to use the default handler for checkHide
-// 1805e80:
-//    b handler_Kaminari_checkHide
-// 1805f70:
-//    b handler_Kaminari_excuseHitCalc
-// 18060b0:
-//    b handler_Kaminari_hitRatio
-//221f004:
-//    bl BTL_STRID_STD_system_array_new
-// 18048c0:
-//    b ADD_Karagenki
 
-
-// BTL_CLIENT$$is_unselectable_waza
-1f54b40:
+// Dpr.Battle.Logic.BTL_CLIENT$$is_unselectable_waza
+023B6000: // 01F54B40
     b Dpr_Battle_Logic_BTL_CLIENT_is_unselectable_waza

@@ -1,11 +1,8 @@
-[target=main, version=bd_130]
-// 1cb2380:
-//    b displayPower1
-
-// 1d99c20:
-//    b displaySummaryPower
-1cba4f4:
+[target=main, version=sp_130]
+// Dpr.UI.BoxWindow$$UpdatePlusMinusButton
+02122E74: // 01CBA4F4
     mov x0, #0x1
 
-1cb1e40:
+// Dpr.UI.BoxStatusPanel$$GetJudgeTextCode
+0211A7C0: // 01CB1E40
     b Dpr_UI_BoxStatusPanel_GetJudgeTextCode

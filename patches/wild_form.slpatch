@@ -1,9 +1,16 @@
-[target=main, version=bd_130]
-19b4990:
+[target=main, version=sp_130]
+// Dpr.Field.FieldEncount$$LastProc
+01E1D310: // 019B4990
     b LastProc
-179ea88:
+
+// FieldManager$$ResultSetUpWildBattle
+01BD1D18: // 0179EA88
     bl GetFormNo0
-179ebec:
+
+// FieldManager$$ResultSetUpWildBattle
+01BD1E7C: // 0179EBEC
     bl GetFormNo1
-1d4d834:
+
+// FieldManager.<>c__DisplayClass121_0$$<update>b__0
+021B61B4: // 01D4D834
     bl GetFormNo0

@@ -1,14 +1,12 @@
-[target=main, version=bd_130]
-// void Dpr.EvScript.EvDataManager$$EndSpray(Dpr_EvScript_EvDataManager_o *__this,MethodInfo *method )
-//2c550b8:
-//    bl JumpLabel
-
+[target=main, version=sp_130]
 // EncountDataWork$$EncDataSave_CanUseSpray
-01f08ac0:
+02350120: // 01F08AC0
     b EncDataSave_CanUseSpray
 
-// Overwrite calls to ItemWork$$IsUseSpray
-017a2984:
+// FieldManager$$CheckAvailableFieldItem
+01BD5C14: // 017A2984
     bl IsUseSpray
-01bde854:
+
+// Dpr.UI.UIBag.<>c__DisplayClass127_1$$<ShowItemContextMenu>b__11
+020471D4: // 01BDE854
     bl IsUseSpray

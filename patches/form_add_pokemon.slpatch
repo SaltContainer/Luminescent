@@ -1,11 +1,12 @@
-[target=main, version=bd_130]
-//    mov x1, x19
-2c6853c:
-    ldr x1, [x19 , #0x4c0 ]
+[target=main, version=sp_130]
+// Dpr.EvScript.EvDataManager$$EvCmdAddPokemonUI
+01B2B12C: // 02C6853C
+    ldr x1, [x19, #0x4c0]
 
-// Allow 6 IV pokemon
-2053b24:
-    cmp        w8,#0x7
+// Pml.PokePara.Factory$$FixInitSpec
+024A07B4: // 02053B24
+    cmp w8, #0x7
 
-2c68544:
+// Dpr.EvScript.EvDataManager$$EvCmdAddPokemonUI
+01B2B134: // 02C68544
     bl FormAdd_InitialSpec_ctor

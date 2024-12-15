@@ -1,7 +1,4 @@
-[target=main, version=bd_130]
-18bfa90:
+[target=main, version=sp_130]
+// Dpr.UnderGround.UgPokeLottery$$LotteryPoke
+01D0E9F0: // 018BFA90
     b Dpr_UnderGround_UgPokeLottery_LotteryPoke
-// 18bec98:
-//    bl Dpr_UnderGround_UgPokeLottery_GetEnablePokes
-// 1efc790:
-//    b GetEnablePokes_b0

@@ -1,3 +1,4 @@
-[target=main, version=bd_130]
-01d46b00:
+[target=main, version=sp_130]
+// Dpr.UI.ShopBoutiqueChange$$SetupBoutiqueItemParams
+021AF480: // 01D46B00
     b Dpr_UI_ShopBoutiqueChange_SetupBoutiqueItemParams

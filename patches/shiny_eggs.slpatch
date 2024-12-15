@@ -1,17 +1,16 @@
-[target=main, version=bd_130]
-
-02cccf00:
+[target=main, version=sp_130]
+// GameData.DataManager$$GetUniqueID
+01E060D0: // 02CCCF00
     b DataManager_GetUniqueID1
 
-//02ccd050:
-//    b DataManager_GetUniqueID2
-
-02ccd170:
+// GameData.DataManager$$GetUniqueID
+01E06340: // 02CCD170
     b DataManager_GetUniqueID3
 
-
-01cc503c:
+// Dpr.UI.BoxWindow$$OnContextMenu
+0212D9BC: // 01CC503C
     bl Allow_Release_Egg
 
-01cc5888:
+// Dpr.UI.BoxWindow$$OnContextMenu
+0212E208: // 01CC5888
     bl Allow_Release_Egg

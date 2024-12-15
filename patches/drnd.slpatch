@@ -1,159 +1,183 @@
-[target=main, version=bd_130]
-17dcbd0:
+[target=main, version=sp_130]
+// ZukanWork$$GetStatus
+01C0FE60: // 017DCBD0
     b ZukanWork_GetStatus
 
-17dc990:
+// ZukanWork$$IsGet
+01C0FC20: // 017DC990
     b ZukanWork_IsGet1
 
-17dcc90:
+// ZukanWork$$IsGet
+01C0FF20: // 017DCC90
     b ZukanWork_IsGet2
 
-17dca50:
+// ZukanWork$$IsSee
+01C0FCE0: // 017DCA50
     b ZukanWork_IsSee
 
-17dcb10:
+// ZukanWork$$IsUwasa
+01C0FDA0: // 017DCB10
     b ZukanWork_IsUwasa
 
-17dbce0:
+// ZukanWork$$SetPoke
+01C0EF70: // 017DBCE0
     b ZukanWork_SetPoke
 
-17db8f0:
+// ZukanWork$$SeeCount
+01C0EB80: // 017DB8F0
     b ZukanWork_SeeCount
 
-17dba80:
+// ZukanWork$$SeeSinouCount
+01C0ED10: // 017DBA80
     b ZukanWork_SeeSinouCount
 
-17db510:
+// ZukanWork$$GetCount
+01C0E7A0: // 017DB510
     b ZukanWork_GetCount
 
-17db6a0:
+// ZukanWork$$GetSinouCount
+01C0E930: // 017DB6A0
     b ZukanWork_GetSinouCount
 
-17dd0b0:
+// ZukanWork$$CheckShinouZukanCompSee
+01C10340: // 017DD0B0
     b ZukanWork_CheckShinouZukanCompSee
 
-17dd260:
+// ZukanWork$$CheckZenkokuZukanCompGet
+01C104F0: // 017DD260
     b ZukanWork_CheckZenkokuZukanCompGet
 
-// 
-1bb1364:
+// Dpr.UI.ZukanInfo$$SetupUITexts
+02019CE4: // 01BB1364
     mov x3, x21
     bl DescText_SetupMessage
 
-// 0x388 = 904, the current max number of pokemon in the dex
-// 0x3F1 = 1009, the current max number of pokemon including paldea
 // ZukanWork$$GetViewModelUniqueID
-017DCF78:
+01C10208: // 017DCF78
     cmp w19, #0x3F1
 
 // ZukanWork$$SetViewModelUniqueID
-017DD030:
+01C102C0: // 017DD030
     cmp w20, #0x3F1
 
 // ZukanWork$$.cctor
-017DDEE0:
+01C11170: // 017DDEE0
     mov w1, #0x3F2
 
 // UgMainProc$$CreatePoke
-018D372C:
+01D2268C: // 018D372C
     cmp w0, #0
 
 // PokemonSelector$$Update
-0199CA48:
+01DEB9A8: // 0199CA48
     cmp w9, #0x3F3
 
-0199CA54:
+// PokemonSelector$$Update
+01DEB9B4: // 0199CA54
     sub w8, w8, #0x3F1
 
-0199CA88:
+// PokemonSelector$$Update
+01DEB9E8: // 0199CA88
     sub w8, w8, #0x3F1
 
 // Dpr.UI.UIZukan$$SetupZukan
-01A39760:
+01EA20E0: // 01A39760
     cmp w22, #0x3F3
 
 // Dpr.Field.Walking.FieldWalkingManager$$UpdatePartnerPokeIndex
-01CD637C:
+0213ECFC: // 01CD637C
     cmp w8, #0x3F1
 
 // Dpr.Field.Walking.FieldWalkingManager$$IsPokeParaOK
-01CD6494:
+0213EE14: // 01CD6494
     cmp w8, #0x3F2
 
 // Dpr.Field.Walking.FieldWalkingManager$$LoadPartnerPoke
-01CD6628:
+0213EFA8: // 01CD6628
     cmp w8, #0x3F1
 
 // Dpr.Field.Walking.FieldWalkingManager$$CheckPartnerPokeChange
-01CD6ECC:
+0213F84C: // 01CD6ECC
     cmp w8, #0x3F1
 
 // Dpr.Field.Walking.FieldWalkingManager$$IsCanTurearuki
-01CD799C:
+0214031C: // 01CD799C
     cmp w8, #0x3F1
 
 // Dpr.Field.Walking.FieldWalkingManager.<CreatePartner>d__43$$MoveNext
-01CD8B1C:
+0214149C: // 01CD8B1C
     cmp w8, #0x3F1
-01CD8CD8:
+
+// Dpr.Field.Walking.FieldWalkingManager.<CreatePartner>d__43$$MoveNext
+02141658: // 01CD8CD8
     cmp w8, #0x3F1
-01CD8F68:
+
+// Dpr.Field.Walking.FieldWalkingManager.<CreatePartner>d__43$$MoveNext
+021418E8: // 01CD8F68
     cmp w8, #0x3F1
 
 // Dpr.Battle.Logic.tables$$.cctor
-01F7B440:
+023DC900: // 01F7B440
     mov w8, #0x3F2
 
 // Dpr.Battle.Logic.MainModule$$setupCommon_ClientPublicInformation
-0202FAF0:
+0247C780: // 0202FAF0
     mov w26, #0x3F3
 
 // Pml.PokePara.CoreParam$$ChangeEgg
-020494EC:
+0249617C: // 020494EC
     mov w0, #0x3F3
 
 // Pml.PokePara.EggGenerator$$SetupEggParam
-0204EA40:
+0249B6D0: // 0204EA40
     mov w0, #0x3F3
 
 // Pml.PokePara.EggGenerator$$IsWazaMachineAbleToUse
-02051BA0:
+0249E830: // 02051BA0
     cmp w21, #0x3F3
 
 // Pml.PokePara.InitialSpec$$.ctor
-02052220:
+0249EEB0: // 02052220
     mov w8, #0x3F3
 
 // Pml.Personal.PersonalSystem$$GetMonsLabel
-024A09B4:
+027B34E4: // 024A09B4
     cmp w8, #0x3F3
-024A09C4:
+
+// Pml.Personal.PersonalSystem$$GetMonsLabel
+027B34F4: // 024A09C4
     cmp w0, #0x3F2
 
 // Pml.Personal.PersonalSystem$$GetMonsName
-024A0A5C:
+027B358C: // 024A0A5C
     cmp  w8, #0x3F3
     mov  w8, #0x3F2
-024A0B64:
+
+// Pml.Personal.PersonalSystem$$GetMonsName
+027B3694: // 024A0B64
     cmp  w8, #0x3F3
     mov  w8, #0x3F2
 
 // Pml.Personal.PersonalSystem$$GetDataID
-024A0EAC:
+027B39DC: // 024A0EAC
     cmp w19, #0x3F2
-024A0F54:
+
+// Pml.Personal.PersonalSystem$$GetDataID
+027B3A84: // 024A0F54
     cmp w19, #0x3F2
 
 // Pml.Personal.PersonalSystem$$GetDataID_AddPersonal
-024A2ACC:
+027B55FC: // 024A2ACC
     cmp w19, #0x3F2
-024A2BC8:
+
+// Pml.Personal.PersonalSystem$$GetDataID_AddPersonal
+027B56F8: // 024A2BC8
     cmp w19, #0x3F2
 
 // Pml.PokePara.Accessor$$Initialize
-024A3B48:
+027B6678: // 024A3B48
     mov w9, #0x3F3
 
 // Pml.PokePara.Accessor$$GetNickName
-024A6B38:
+027B9668: // 024A6B38
     mov w0, #0x3F3

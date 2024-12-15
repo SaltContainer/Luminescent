@@ -1,4 +1,5 @@
-[target=main, version=bd_130]
-018f8dd8:
-    ldr x2, [x23] // bpp
+[target=main, version=sp_130]
+// Dpr.Battle.Logic.ExpCalculator$$calcExp_Poke
+01D47D38: // 018F8DD8
+    ldr x2, [x23]
     bl CONFRONT_REC_IsMatch
