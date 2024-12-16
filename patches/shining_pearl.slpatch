@@ -1,0 +1,16 @@
+[target=main, version=sp_130]
+
+// PlayerWork$$CustomSaveOperation+0x40
+02387450:
+    mov w22, #0x0
+
+// PlayerWork$$CustomSaveAsyncOperation+0x50
+02387960:
+    mov w22, #0x0
+
+// GameManager$$OnUpdate version check
+01E0B2C0:
+    cmp w0, #0x30
+
+01E0B500:
+    cmp w0, #0x30
