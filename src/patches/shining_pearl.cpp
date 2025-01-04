@@ -1,6 +1,11 @@
 #include "il2cpp-api.h"
 #include "util.hpp"
 #include "logger.hpp"
+#include "Dpr/EvScript/EvDataManager.hpp"
+
+static constexpr int32_t BD_SPEAR_PILLAR = 216;
+static constexpr int32_t SP_SPEAR_PILLAR = 217;
+
 
 namespace UnityEngine::UI {
     struct RawImage_o;

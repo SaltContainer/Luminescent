@@ -26,6 +26,9 @@
 // Dpr_EvScript_EvDataManager$$CreateWarpEntity
 01B657EC:
     cmp w8, #0xd9
-
-01B657F0:
     mov w9, #0xd8
+
+// Dpr_EvScript_EvDataManager$$WarpUpdateEnd
+01B10A08:
+    mov w10, #0xd8
+    cmp w9, #0xd9
