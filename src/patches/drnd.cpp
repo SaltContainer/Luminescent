@@ -330,14 +330,14 @@ int32_t ZukanWork_SeeSinouCount(bool isRating, MethodInfo *method)
         int32_t monsno = ShinouZukanNos->m_Items[i];
         if (isRating)
         {
-            int32_t index = Array_IndexOf(ZukanWork_TypeInfo->static_fields->ZukanRatingExcludeNos, monsno+1, Array_IndexOf_MethodInfo);
+            int32_t index = Array_IndexOf(ZukanWork_TypeInfo->static_fields->ZukanRatingExcludeNos, monsno, Array_IndexOf_MethodInfo);
             if (index >= 0)
             {
                 continue;
             }
         }
 
-        int32_t zukanStatus = GetZukanStatus(&zukanWork, monsno);
+        int32_t zukanStatus = GetZukanStatus(&zukanWork, monsno-1);
         if (zukanStatus >= IS_SEE)
         {
             seeCount += 1;
@@ -392,14 +392,14 @@ int32_t ZukanWork_GetSinouCount(bool isRating, MethodInfo *method)
         int32_t monsno = ShinouZukanNos->m_Items[i];
         if (isRating)
         {
-            int32_t index = Array_IndexOf(ZukanWork_TypeInfo->static_fields->ZukanRatingExcludeNos, monsno+1, Array_IndexOf_MethodInfo);
+            int32_t index = Array_IndexOf(ZukanWork_TypeInfo->static_fields->ZukanRatingExcludeNos, monsno, Array_IndexOf_MethodInfo);
             if (index >= 0)
             {
                 continue;
             }
         }
 
-        int32_t zukanStatus = GetZukanStatus(&zukanWork, monsno);
+        int32_t zukanStatus = GetZukanStatus(&zukanWork, monsno-1);
         if (zukanStatus == IS_GET)
         {
             seeCount += 1;
